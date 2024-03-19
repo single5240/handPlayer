@@ -1031,16 +1031,6 @@
               <FilePath>..\bsp\drv_uart.c</FilePath>
             </File>
             <File>
-              <FileName>drv_e28.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\drv_e28.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_modbus.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\drv_modbus.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\bsp\drv_led.c</FilePath>
@@ -1124,26 +1114,6 @@
               <FileName>ef_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\components\easyflash\src\ef_utils.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>mbr_dev</GroupName>
-          <Files>
-            <File>
-              <FileName>sd710.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\components\mbr_dev\sd710.c</FilePath>
-            </File>
-            <File>
-              <FileName>hs100.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\components\mbr_dev\hs100.c</FilePath>
-            </File>
-            <File>
-              <FileName>hy_g100.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\components\mbr_dev\hy_g100.c</FilePath>
             </File>
           </Files>
         </Group>

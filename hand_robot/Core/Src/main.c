@@ -106,12 +106,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   __enable_irq();
 //	SEGGER_RTT_printf(0,"RTT printf test! \r\n");
-	printf(RTT_CTRL_BG_BRIGHT_GREEN RTT_CTRL_TEXT_BRIGHT_RED"app is running!\r\n");
-	printf(RTT_CTRL_RESET);
-	printf("app is running!\r\n");
-//  HAL_GPIO_WritePin(E28_M0_GPIO_Port, E28_M0_Pin, GPIO_PIN_RESET);
-//  HAL_GPIO_WritePin(E28_M1_GPIO_Port, E28_M1_Pin, GPIO_PIN_RESET);
-//  HAL_GPIO_WritePin(E28_M2_GPIO_Port, E28_M2_Pin, GPIO_PIN_SET);
+	// printf(RTT_CTRL_BG_BRIGHT_GREEN RTT_CTRL_TEXT_BRIGHT_RED"app is running!\r\n");
+	// printf(RTT_CTRL_RESET);
+	// printf("app is running!\r\n");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

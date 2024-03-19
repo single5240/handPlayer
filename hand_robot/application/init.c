@@ -2,8 +2,6 @@
 
 #include "main.h"
 #include "drv_uart.h"
-#include "drv_modbus.h"
-#include "drv_e28.h"
 #include "letter_shell_task.h"
 
 #include "event_mgr.h"
@@ -95,11 +93,6 @@ void board_config(void)
 {
 	/* system log */
 	uart5_manage_init();
-	log_printf("\r\n\r\n"
-			   "************SANGLIANG Receiver**************\r\n");
-	log_printf("* Copy right: All right reserved.\r\n");
-	log_printf("* Release Time: %s.\r\n", __TIME__);
-	log_printf("********************************************\r\n");
 
 	uart5_rx_callback_register(uart5_rx_callback);
 

@@ -4,7 +4,6 @@
 #include "drv_uart.h"
 #include "init.h"
 #include "fifo.h"
-#include "drv_e28.h"
 #include "event_mgr.h"
 #include "shell.h"
 #include "offline_task.h"
@@ -113,11 +112,6 @@ SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), 
 
 int show_state(void)
 {
-    log_printf("radio state = %d, radio freq = %f\r\n", offline_detector_get_state(&offline_detector->radio), offline_detector_get_freq(&offline_detector->radio));
-    log_printf("mbr1 state = %d, mbr1 freq = %f\r\n", offline_detector_get_state(&offline_detector->mbr1), offline_detector_get_freq(&offline_detector->mbr1));
-    log_printf("mbr2 state = %d, mbr2 freq = %f\r\n", offline_detector_get_state(&offline_detector->mbr2), offline_detector_get_freq(&offline_detector->mbr2));
-    log_printf("mbr3 state = %d, mbr3 freq = %f\r\n", offline_detector_get_state(&offline_detector->mbr3), offline_detector_get_freq(&offline_detector->mbr3));
-    log_printf("io state = %d, io freq = %f\r\n", offline_detector_get_state(&offline_detector->io), offline_detector_get_freq(&offline_detector->io));
     return 1;
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), info_state, show_state, 显示所有模块状态);

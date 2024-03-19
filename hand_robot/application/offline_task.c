@@ -71,16 +71,8 @@ void offlin_module_init(offline_module_p olm, float check_gap_time, int16_t min_
 	olm->c_check_time = 0;	
 }
 
-
-
 void Offline_Task(void const *argument)
 {
-	offlin_module_init(&offline_manage.radio,0.5f,5);
-	offlin_module_init(&offline_manage.mbr1,0.5f,10);
-	offlin_module_init(&offline_manage.mbr2,0.5f,10);
-	offlin_module_init(&offline_manage.mbr3,0.5f,10);
-	offlin_module_init(&offline_manage.io,0.5f,10);
-	
 	osDelay(500);
 
 	log_i("offline_task_launch!");
@@ -89,17 +81,9 @@ void Offline_Task(void const *argument)
 
 	while (1)
 	{
-//		offline_manage.io.offline_service_f(&offline_manage.io,0.002);
-//		offline_manage.mbr1.offline_service_f(&offline_manage.mbr1,0.002);
-//		offline_manage.mbr2.offline_service_f(&offline_manage.mbr2,0.002);
-//		offline_manage.mbr3.offline_service_f(&offline_manage.mbr3,0.002);
-//		offline_manage.radio.offline_service_f(&offline_manage.radio,0.002);
-//		
-//		radio_match_timeout_check();
 		osDelayUntil(&period, 2);
 	}
 }
-
 
 void *get_offline_manage(void)
 {
@@ -107,25 +91,5 @@ void *get_offline_manage(void)
 }
 
 
-
-void offline_detector_event_updata(offline_module_p olm)
-{
-	if(olm->offline_event_updata_f != NULL)
-		olm->offline_event_updata_f(olm);
-}
-
-uint8_t offline_detector_get_state(offline_module_p olm)
-{
-	if(olm->offline_get_state_f != NULL)
-		return olm->offline_get_state_f(olm);
-	return MOUDLE_OFFLINE;
-}
-
-float offline_detector_get_freq(offline_module_p olm)
-{
-	if(olm->offline_get_freq_f != NULL)
-		return olm->offline_get_freq_f(olm);
-	return 0;
-}
 
 
