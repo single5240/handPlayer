@@ -1020,6 +1020,11 @@
               <FileType>1</FileType>
               <FilePath>..\application\offline_task.c</FilePath>
             </File>
+            <File>
+              <FileName>app_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\app_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "app_task.h": "c",
+        "cmsis_os.h": "c",
+        "proj_config.h": "c",
+        "fifo.h": "c"
+    }
+}

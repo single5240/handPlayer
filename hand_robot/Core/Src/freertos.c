@@ -69,6 +69,7 @@ osThreadId ShellTaskHandle;
 
 /* USER CODE END Variables */
 osThreadId startTaskHandle;
+osThreadId appTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -76,6 +77,7 @@ osThreadId startTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartTask(void const * argument);
+void AppTask(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -187,6 +189,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(startTask, StartTask, osPriorityNormal, 0, 1024);
   startTaskHandle = osThreadCreate(osThread(startTask), NULL);
 
+  /* definition and creation of appTask */
+  osThreadDef(appTask, AppTask, osPriorityIdle, 0, 1024);
+  appTaskHandle = osThreadCreate(osThread(appTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 
@@ -228,6 +234,24 @@ __weak void StartTask(void const * argument)
 			osDelayUntil(&period, 500);
   }
   /* USER CODE END StartTask */
+}
+
+/* USER CODE BEGIN Header_AppTask */
+/**
+* @brief Function implementing the appTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_AppTask */
+__weak void AppTask(void const * argument)
+{
+  /* USER CODE BEGIN AppTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END AppTask */
 }
 
 /* Private application code --------------------------------------------------*/

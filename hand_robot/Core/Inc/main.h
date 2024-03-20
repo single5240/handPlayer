@@ -77,14 +77,6 @@ void Error_Handler(void);
 #define RJ45_LED_R1_GPIO_Port GPIOB
 #define USART1_TXEN_Pin GPIO_PIN_14
 #define USART1_TXEN_GPIO_Port GPIOB
-#define E28_AUX_Pin GPIO_PIN_15
-#define E28_AUX_GPIO_Port GPIOB
-#define E28_M1_Pin GPIO_PIN_8
-#define E28_M1_GPIO_Port GPIOC
-#define E28_M0_Pin GPIO_PIN_9
-#define E28_M0_GPIO_Port GPIOC
-#define E28_M2_Pin GPIO_PIN_8
-#define E28_M2_GPIO_Port GPIOA
 #define AN1_KEY_Pin GPIO_PIN_3
 #define AN1_KEY_GPIO_Port GPIOB
 #define AN1_LED_Pin GPIO_PIN_4
