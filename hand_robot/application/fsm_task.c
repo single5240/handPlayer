@@ -24,10 +24,9 @@
 
 void Fsm_Task(void const *argument)
 {
-
-	log_i("Fsm_Task_launch!");
 	uint32_t period = osKernelSysTick();
 	app_obj_p app_main_temp_p = (app_obj_p) get_obj_p();
+	log_i("Fsm_Task_launch!");
 	while (1)
 	{
 		if(app_main_temp_p->fsm_eventHandle_f != NULL){
@@ -38,3 +37,6 @@ void Fsm_Task(void const *argument)
 		osDelayUntil(&period, 1);
 	}
 }
+
+
+
