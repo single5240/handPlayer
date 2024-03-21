@@ -38,3 +38,6 @@ void Fsm_Task(void const *argument)
 		osDelayUntil(&period, 1);
 	}
 }
+
+
+

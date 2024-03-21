@@ -76,25 +76,25 @@ static void state_onlineset_proccess(app_obj_p aop);
 /* 状态迁移表 */
 static FsmTable_T fsm_table[] =
 	{
-		/* 触发事件         			初态            		动作函数             			次态  	*/
-		{EVENT_AUTOPARA_SUCCESS, 	STATE_AUTOPARA, 		fsm_auto_para_callback, 		STATE_READYWAIT},
+		/* 触发事件         				初态            		动作函数             				次态  	*/
+		{EVENT_AUTOPARA_SUCCESS, 		STATE_AUTOPARA, 		fsm_auto_para_callback, 		STATE_READYWAIT},
 
-		{EVENT_ACTIVE_START, 		STATE_READYWAIT, 		fsm_active_start_callback, 		STATE_ACTIVECTL},
-		{EVENT_ACTIVE_FINISH, 		STATE_READYWAIT, 		fsm_active_finish_callback, 	STATE_PASSIVECTL},
+		{EVENT_ACTIVE_START, 			STATE_READYWAIT, 		fsm_active_start_callback, 		STATE_ACTIVECTL},
+		{EVENT_ACTIVE_FINISH, 			STATE_ACTIVECTL, 		fsm_active_finish_callback, 	STATE_READYWAIT},
 
-		{EVENT_PASSIVE_START, 		STATE_READYWAIT, 		fsm_passive_start_callback, 	STATE_ONLINESET},
-		{EVENT_PASSIVE_FINISH, 		STATE_PASSIVECTL, 		fsm_passive_finish_callback, 	STATE_READYWAIT},
+		{EVENT_PASSIVE_START, 			STATE_READYWAIT, 		fsm_passive_start_callback, 	STATE_PASSIVECTL},
+		{EVENT_PASSIVE_FINISH, 			STATE_PASSIVECTL, 		fsm_passive_finish_callback, 	STATE_READYWAIT},
 
-		{EVENT_PARARESET_START, 	STATE_READYWAIT, 		fsm_para_set_callback, 			STATE_ONLINESET},
-		{EVENT_PARARESET_FINISH, 	STATE_ONLINESET, 		fsm_para_set_callback, 			STATE_READYWAIT},
+		{EVENT_PARARESET_START, 		STATE_READYWAIT, 		fsm_para_set_callback, 			STATE_ONLINESET},
+		{EVENT_PARARESET_FINISH,		STATE_ONLINESET, 		fsm_para_set_callback, 			STATE_READYWAIT},
 
-		{EVENT_EMSTOP, 				STATE_AUTOPARA, 		fsm_emstop_callback, 			STATE_EMSTOP},
-		{EVENT_EMSTOP, 				STATE_READYWAIT, 		fsm_emstop_callback, 			STATE_EMSTOP},
-		{EVENT_EMSTOP, 				STATE_ACTIVECTL, 		fsm_emstop_callback, 			STATE_EMSTOP},
-		{EVENT_EMSTOP, 				STATE_PASSIVECTL, 		fsm_emstop_callback, 			STATE_EMSTOP},
-		{EVENT_EMSTOP, 				STATE_ONLINESET, 		fsm_emstop_callback, 			STATE_EMSTOP},
+		{EVENT_EMSTOP, 					STATE_AUTOPARA, 		fsm_emstop_callback, 			STATE_EMSTOP},
+		{EVENT_EMSTOP, 					STATE_READYWAIT, 		fsm_emstop_callback, 			STATE_EMSTOP},
+		{EVENT_EMSTOP, 					STATE_ACTIVECTL, 		fsm_emstop_callback, 			STATE_EMSTOP},
+		{EVENT_EMSTOP, 					STATE_PASSIVECTL, 		fsm_emstop_callback, 			STATE_EMSTOP},
+		{EVENT_EMSTOP, 					STATE_ONLINESET, 		fsm_emstop_callback, 			STATE_EMSTOP},
 
-		{EVENT_QUIT_EMSTOP, 		STATE_EMSTOP, 			fsm_emstop_callback, 			STATE_READYWAIT},
+		{EVENT_QUIT_EMSTOP, 			STATE_EMSTOP, 			fsm_emstop_callback, 			STATE_READYWAIT},
 };
 static uint16_t fsm_table_lenth = sizeof(fsm_table) / sizeof(FsmTable_T);
 
@@ -151,35 +151,55 @@ static void fsm_para_set_callback(void *parm){
 
 /******************************** 状态函数 ********************************/
 
-static void state_autoparam_proccess(app_obj_p aop){
+static void state_autoparam_proccess(app_obj_p aop)
+{
 	aop->fsm_eventUpdate_f(aop, EVENT_AUTOPARA_SUCCESS);
-	log_i("state_autoparam_proccess");
+	// log_i("state_autoparam_proccess");
 }
 
-static void state_readywait_proccess(app_obj_p aop){
+static void state_readywait_proccess(app_obj_p aop)
+{
 	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_START);
-	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_START);
-	log_i("state_readywait_proccess");
+	//	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_START);
+	// log_i("state_readywait_proccess");
 }
 
-static void state_activectl_proccess(app_obj_p aop){
+static void state_activectl_proccess(app_obj_p aop)
+{
 	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_FINISH);
-	log_i("state_activectl_proccess");
+	// log_i("state_activectl_proccess");
 }
 
-static void state_passivectl_proccess(app_obj_p aop){
+static void state_passivectl_proccess(app_obj_p aop)
+{
 	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_FINISH);
-	log_i("state_passivectl_proccess");
+	// log_i("state_passivectl_proccess");
 }
 
-static void state_emstop_proccess(app_obj_p aop){
-	log_i("state_emstop_proccess");
+static void state_emstop_proccess(app_obj_p aop)
+{
+	// log_i("state_emstop_proccess");
 }
 
-static void state_onlineset_proccess(app_obj_p aop){
-	log_i("state_onlineset_proccess");
+static void state_onlineset_proccess(app_obj_p aop)
+{
+	// log_i("state_onlineset_proccess");
 }
 
+static void fsmUpdateEvent(void *this_p, uint8_t event)
+{
+	app_obj_p aop;
+	if (this_p != NULL)
+		aop = this_p;
+	else
+		log_e("null pointer!");
+
+	/* 触发事件入队 */
+	if (fifo_s_isfull(&aop->event_fifo) == 1)
+		log_e("触发事件入队失败,事件队列已满!\r\n");
+	else
+		fifo_s_put(&aop->event_fifo, event);
+}
 static void fsmEventHandle(void *this_p)
 {
 	app_obj_p aop;
@@ -228,20 +248,7 @@ void aop_fsm_config(app_obj_p aop)
 	aop->fsm_eventHandle_f = fsmEventHandle;
 	aop->fsm_eventUpdate_f = fsmUpdateEvent;
 }
-static void fsmUpdateEvent(void *this_p, uint8_t event)
-{
-	app_obj_p aop;
-	if (this_p != NULL)
-		aop = this_p;
-	else
-		log_e("null pointer!");
 
-	/* 触发事件入队 */
-	if (fifo_s_isfull(&aop->event_fifo) == 1)
-		log_e("触发事件入队失败,事件队列已满!\r\n");
-	else
-		fifo_s_put(&aop->event_fifo, event);
-}
 
 void *get_obj_p(void){
 	return &app_main_obj;
