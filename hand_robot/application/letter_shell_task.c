@@ -20,7 +20,6 @@ char shellBuffer[CMD_BUFSIZE];
 
 fifo_s_t shell_fifo;
 char shell_fifo_buf[CMD_BUFSIZE];
-static offline_manage_obj_p offline_detector;
 
 void shell_interupt(uint8_t *buff, uint16_t len)
 {
@@ -73,9 +72,7 @@ short userShellRead_by_Segger_RTT(char *data, unsigned short len)
 void Shell_Task(void const *argument)
 {
     char data;
-    UNUSED(data);
 
-    offline_detector = get_offline_manage();
     fifo_s_init(&shell_fifo, shell_fifo_buf, CMD_BUFSIZE);
     shell.write = userShellWrite;
 
@@ -87,7 +84,7 @@ void Shell_Task(void const *argument)
 
     osDelay(6000);
     shellInit(&shell, shellBuffer, CMD_BUFSIZE);
-    // log_i(RTT_CTRL_RESET"Shell_Task_launch!");
+    log_i(RTT_CTRL_RESET"Shell_Task_launch!");
     while (1)
     {
         if (shell.read && shell.read(&data, 1) == 1)
@@ -106,7 +103,7 @@ int func(int argc, char *agrv[])
         shellPrint(&shell,"hello, %s\r\n",agrv[i]);
         log_printf("hello, %s\r\n", agrv[i]);
     }
-    return 0;
+    return 8;
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), func, func, 测试命令);
 

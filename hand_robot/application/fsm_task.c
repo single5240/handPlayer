@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-03-19 10:16:12
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-07 17:46:36
+ * @LastEditTime: 2024-04-08 18:12:40
  * @FilePath: \hand_robot\application\fsm_task.c
  * @Description: 
  * 
@@ -25,14 +25,9 @@
 void Fsm_Task(void const *argument)
 {
 	uint32_t period = osKernelSysTick();
-	app_obj_p app_main_temp_p = (app_obj_p) get_obj_p();
 	while (1)
 	{
-		if(app_main_temp_p->fsm_eventHandle_f != NULL){
-			app_main_temp_p->fsm_eventHandle_f(app_main_temp_p);
-		} else {
-			log_e("null pointer!");
-		}
+		
 		osDelayUntil(&period, 1);
 	}
 }

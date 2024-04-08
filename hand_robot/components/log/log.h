@@ -9,7 +9,6 @@ extern "C"
 #include "log_config.h"
 #include "proj_config.h"
 
-
 #ifndef LOG_TAG
 #define LOG_TAG "log"
 #endif

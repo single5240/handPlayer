@@ -22,7 +22,7 @@ static enum {
 	STATE_EMSTOP, //
 	STATE_ONLINESET, //
 
-} fsm_state_e;
+} ;
 
 /** @enum radio_trig_event_e
  *  @brief 状态机触发事件
@@ -42,7 +42,10 @@ static enum {
 	EVENT_EMSTOP, //
 
 	EVENT_QUIT_EMSTOP,
-} trig_event_e;
+
+	EVENT_ACTIVE_RUNNING,
+	EVENT_PASSIVE_RUNNING,
+} ;
 
 
 /* 动作函数 */
@@ -60,18 +63,22 @@ static void fsm_emstop_callback(void *parm);
 
 static void fsm_para_set_callback(void *parm);
 
+static void fsm_active_run_callback(void *parm);
+
+static void fsm_passive_run_callback(void *parm);
+
 /* 状态函数 */
-static void state_autoparam_proccess(app_obj_p aop);
+// static void state_autoparam_proccess(app_obj_p aop);
 
-static void state_readywait_proccess(app_obj_p aop);
+// static void state_readywait_proccess(app_obj_p aop);
 
-static void state_activectl_proccess(app_obj_p aop);
+// static void state_activectl_proccess(app_obj_p aop);
 
-static void state_passivectl_proccess(app_obj_p aop);
+// static void state_passivectl_proccess(app_obj_p aop);
 
-static void state_emstop_proccess(app_obj_p aop);
+// static void state_emstop_proccess(app_obj_p aop);
 
-static void state_onlineset_proccess(app_obj_p aop);
+// static void state_onlineset_proccess(app_obj_p aop);
 
 /* 状态迁移表 */
 static FsmTable_T fsm_table[] =
@@ -95,42 +102,48 @@ static FsmTable_T fsm_table[] =
 		{EVENT_EMSTOP, 					STATE_ONLINESET, 		fsm_emstop_callback, 			STATE_EMSTOP},
 
 		{EVENT_QUIT_EMSTOP, 			STATE_EMSTOP, 			fsm_emstop_callback, 			STATE_READYWAIT},
+
+		/*循环函数*/
+		{EVENT_ACTIVE_RUNNING, 			STATE_ACTIVECTL, 		fsm_active_run_callback, 		STATE_ACTIVECTL},
+		{EVENT_PASSIVE_RUNNING, 		STATE_PASSIVECTL, 		fsm_passive_run_callback, 		STATE_PASSIVECTL},
 };
 static uint16_t fsm_table_lenth = sizeof(fsm_table) / sizeof(FsmTable_T);
 
-static void fsm_stateHandle(app_obj_p aop)
-{
-	switch(aop->fsm.curState){
-		case STATE_AUTOPARA:
-            state_autoparam_proccess(aop);
-            break;
-        case STATE_READYWAIT:
-            state_readywait_proccess(aop);
-            break;
-        case STATE_ACTIVECTL:
-            state_activectl_proccess(aop);
-            break;
-        case STATE_PASSIVECTL:
-            state_passivectl_proccess(aop);
-            break;
-        case STATE_EMSTOP:
-            state_emstop_proccess(aop);
-            break;
-        case STATE_ONLINESET:
-            state_onlineset_proccess(aop);
-            break;
-        default:
-            break;
-	}
-}
+// static void fsm_stateHandle(app_obj_p aop)
+// {
+// 	switch(aop->fsm.curState){
+// 		case STATE_AUTOPARA:
+//             state_autoparam_proccess(aop);
+//             break;
+//         case STATE_READYWAIT:
+//             state_readywait_proccess(aop);
+//             break;
+//         case STATE_ACTIVECTL:
+//             state_activectl_proccess(aop);
+//             break;
+//         case STATE_PASSIVECTL:
+//             state_passivectl_proccess(aop);
+//             break;
+//         case STATE_EMSTOP:
+//             state_emstop_proccess(aop);
+//             break;
+//         case STATE_ONLINESET:
+//             state_onlineset_proccess(aop);
+//             break;
+//         default:
+//             break;
+// 	}
+// }
 
 /****************************** 事件触发函数 ******************************/
 
 /******************************** 动作函数 ********************************/
 static void fsm_auto_para_callback(void *parm){
+	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_START);
 	log_i("auto_para_callback");
 }
 static void fsm_active_start_callback(void *parm){
+	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
 	log_i("active_start_callback");
 }
 static void fsm_active_finish_callback(void *parm){
@@ -148,43 +161,52 @@ static void fsm_emstop_callback(void *parm){
 static void fsm_para_set_callback(void *parm){
     log_i("para_set_callback");
 }
+static void fsm_active_run_callback(void *parm){
+	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
+    log_i("active_run_callback");
 
-/******************************** 状态函数 ********************************/
-
-static void state_autoparam_proccess(app_obj_p aop)
-{
-	aop->fsm_eventUpdate_f(aop, EVENT_AUTOPARA_SUCCESS);
-	// log_i("state_autoparam_proccess");
 }
 
-static void state_readywait_proccess(app_obj_p aop)
-{
-	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_START);
-	//	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_START);
-	// log_i("state_readywait_proccess");
+static void fsm_passive_run_callback(void *parm){
+    log_i("passive_run_callback");
 }
 
-static void state_activectl_proccess(app_obj_p aop)
-{
-//	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_FINISH);
-	// log_i("state_activectl_proccess");
-}
+// /******************************** 状态函数 ********************************/
 
-static void state_passivectl_proccess(app_obj_p aop)
-{
-//	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_FINISH);
-	// log_i("state_passivectl_proccess");
-}
+// static void state_autoparam_proccess(app_obj_p aop)
+// {
+// 	aop->fsm_eventUpdate_f(aop, EVENT_AUTOPARA_SUCCESS);
+// 	// log_i("state_autoparam_proccess");
+// }
 
-static void state_emstop_proccess(app_obj_p aop)
-{
-	// log_i("state_emstop_proccess");
-}
+// static void state_readywait_proccess(app_obj_p aop)
+// {
+// 	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_START);
+// 	//	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_START);
+// 	// log_i("state_readywait_proccess");
+// }
 
-static void state_onlineset_proccess(app_obj_p aop)
-{
-	// log_i("state_onlineset_proccess");
-}
+// static void state_activectl_proccess(app_obj_p aop)
+// {
+// //	aop->fsm_eventUpdate_f(aop, EVENT_ACTIVE_FINISH);
+// 	// log_i("state_activectl_proccess");
+// }
+
+// static void state_passivectl_proccess(app_obj_p aop)
+// {
+// //	aop->fsm_eventUpdate_f(aop, EVENT_PASSIVE_FINISH);
+// 	// log_i("state_passivectl_proccess");
+// }
+
+// static void state_emstop_proccess(app_obj_p aop)
+// {
+// 	// log_i("state_emstop_proccess");
+// }
+
+// static void state_onlineset_proccess(app_obj_p aop)
+// {
+// 	// log_i("state_onlineset_proccess");
+// }
 
 static void fsmUpdateEvent(void *this_p, uint8_t event)
 {
@@ -259,11 +281,16 @@ void AppTask(void const * argument)
 	osDelay(5);
 	aop_fsm_config(&app_main_obj);
 	app_main_obj.fsm_init_f(&app_main_obj, fsm_table, fsm_table_lenth, STATE_AUTOPARA);
+	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_AUTOPARA_SUCCESS);
 	log_i("App_Task_launch!");
 	for(;;)
 	{
-		fsm_stateHandle(&app_main_obj);
-		osDelay(1);
+		if(app_main_obj.fsm_eventHandle_f != NULL){
+			app_main_obj.fsm_eventHandle_f(&app_main_obj);
+		} else {
+			log_e("null pointer!");
+		}
+		osDelay(2000);
 	}
 }
 

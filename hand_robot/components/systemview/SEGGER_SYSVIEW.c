@@ -1,3 +1,13 @@
+/*
+ * @Author: Vincent_Jiang jwslove40@163.com
+ * @Date: 2024-03-19 10:16:12
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-08 10:39:35
+ * @FilePath: \hand_robot\components\systemview\SEGGER_SYSVIEW.c
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
