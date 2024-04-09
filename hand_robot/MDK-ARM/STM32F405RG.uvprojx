@@ -1113,11 +1113,6 @@
               <FilePath>..\application\init.c</FilePath>
             </File>
             <File>
-              <FileName>fsm_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\fsm_task.c</FilePath>
-            </File>
-            <File>
               <FileName>monitor_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\monitor_task.c</FilePath>
@@ -1136,6 +1131,11 @@
               <FileName>app_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\app_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\comm_task.c</FilePath>
             </File>
           </Files>
         </Group>

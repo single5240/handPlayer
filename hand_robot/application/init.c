@@ -86,7 +86,6 @@ void board_config(void)
 {
 	/* system log */
 	uart5_manage_init();
-
 	uart5_rx_callback_register(uart5_rx_callback);
 
 	usart6_manage_init();

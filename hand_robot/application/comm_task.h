@@ -1,5 +1,5 @@
-#ifndef _FSM_TASK_H
-#define _FSM_TASK_H
+#ifndef _COMM_TASK_H
+#define _COMM_TASK_H
 
 
 #ifdef __cplusplus
@@ -8,7 +8,7 @@ extern "C" {
 
 #include "proj_config.h"
 
-void Fsm_Task(void const * argument);
+void Comm_Task(void const * argument);
 
 
 

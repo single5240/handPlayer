@@ -8,21 +8,16 @@
  * 
  * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
  */
-#include "fsm_task.h"
+#include "comm_task.h"
 
-#include "fsm.h"
 #include "cmsis_os.h"
-#include "drv_uart.h"
 #include "init.h"
-#include "fifo.h"
-#include "event_mgr.h"
-#include "app_task.h"
 
-#define LOG_TAG "fsm_task"
+#define LOG_TAG "comm_task"
 #define LOG_OUTPUT_LEVEL LOG_INFO
 #include "log.h"
 
-void Fsm_Task(void const *argument)
+void Comm_Task(void const *argument)
 {
 	uint32_t period = osKernelSysTick();
 	while (1)

@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "fsm_task.h"
+#include "comm_task.h"
 #include "monitor_task.h"
 #include "init.h"
 #include "drv_uart.h"
@@ -218,8 +218,8 @@ __weak void StartTask(void const * argument)
 	board_config();
 	
 	
-  osThreadDef(fsmTask, Fsm_Task, osPriorityAboveNormal, 0, 1024);
-  fsmTaskHandle = osThreadCreate(osThread(fsmTask), NULL);
+  osThreadDef(commTask, Comm_Task, osPriorityAboveNormal, 0, 1024);
+  fsmTaskHandle = osThreadCreate(osThread(commTask), NULL);
 
   osThreadDef(offlineTask, Offline_Task, osPriorityNormal, 0, 512);
   offlineTaskHandle = osThreadCreate(osThread(offlineTask), NULL);
