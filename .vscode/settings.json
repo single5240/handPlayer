@@ -10,6 +10,12 @@
         "main.h": "c",
         "drv_motor.h": "c",
         "my_pid.h": "c",
-        "struct_typedef.h": "c"
+        "struct_typedef.h": "c",
+        "log.h": "c",
+        "shell.h": "c",
+        "letter_shell_task.h": "c",
+        "drv_uart.h": "c",
+        "init.h": "c",
+        "offline_task.h": "c"
     }
 }

@@ -163,7 +163,7 @@ static void fsm_para_set_callback(void *parm){
 }
 static void fsm_active_run_callback(void *parm){
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
-    log_i("active_run_callback");
+    // log_i("active_run_callback");
 
 }
 

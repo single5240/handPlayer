@@ -37,7 +37,7 @@ typedef uint8_t  u8;
 #define DEBUG_RTT 1
 #define DEBUG_UART 0
 
-#define DEBUG_LOG_SHELL_METHOD DEBUG_RTT
+#define DEBUG_LOG_SHELL_METHOD DEBUG_UART
 
 #ifdef __cplusplus
 }

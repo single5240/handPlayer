@@ -95,20 +95,14 @@ void Shell_Task(void const *argument)
     }
 }
 
-int func(int argc, char *agrv[])
+int hello(int argc, char *agrv[])
 {
     printf("%dparameter(s)\r\n", argc);
     for (char i = 1; i < argc; i++)
     {
-        shellPrint(&shell,"hello, %s\r\n",agrv[i]);
-        log_printf("hello, %s\r\n", agrv[i]);
+        // shellPrint(&shell,"hello, %s\r\n",agrv[i]);
+        log_printf("%s:hello, my friend\r\n", agrv[i]);
     }
     return 8;
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), func, func, 测试命令);
-
-int show_state(void)
-{
-    return 1;
-}
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), info_state, show_state, 显示所有模块状态);
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), hello, hello, 测试命令);
