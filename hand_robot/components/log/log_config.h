@@ -1,3 +1,13 @@
+/*
+ * @Author: Vincent_Jiang jwslove40@163.com
+ * @Date: 2024-03-19 10:16:12
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-09 17:02:23
+ * @FilePath: \handPlayer\hand_robot\components\log\log_config.h
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 #ifndef __LOG_CONFIG_H__
 #define __LOG_CONFIG_H__
 

@@ -27,7 +27,7 @@
 #define LOG_OUTPUT_LEVEL LOG_INFO
 #include "log.h"
 
-extern UART_HandleTypeDef huart5;   
+extern UART_HandleTypeDef huart5;
 extern DMA_HandleTypeDef hdma_uart5_rx;
 extern DMA_HandleTypeDef hdma_uart5_tx;
 static uint8_t uart5_rx_buff[UART5_RX_BUFFER_SIZE];
@@ -35,7 +35,7 @@ static uint8_t uart5_tx_buff[UART5_TX_BUFFER_SIZE];
 static uint8_t uart5_tx_fifo_buff[UART5_TX_FIFO_SIZE];
 usart_manage_obj_t uart5_manage_obj = {0};
 
-extern UART_HandleTypeDef huart6;   
+extern UART_HandleTypeDef huart6;  
 extern DMA_HandleTypeDef hdma_usart6_rx;
 extern DMA_HandleTypeDef hdma_usart6_tx;
 uint8_t usart6_rx_buff[USART6_RX_BUFFER_SIZE];
@@ -62,7 +62,7 @@ usart_manage_obj_t usart3_manage_obj = {0};
 extern UART_HandleTypeDef huart1;   
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
-static uint8_t usart1_rx_buff[USART1_RX_BUFFER_SIZE];
+uint8_t usart1_rx_buff[USART1_RX_BUFFER_SIZE];
 static uint8_t usart1_tx_buff[USART1_TX_BUFFER_SIZE];
 static uint8_t usart1_tx_fifo_buff[USART1_TX_FIFO_SIZE];
 usart_manage_obj_t usart1_manage_obj = {0};
@@ -421,10 +421,14 @@ void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
     //		{
     //        usart_rec_to_buff(&usart2_manage_obj, INTERRUPT_TYPE_DMA_HALF);
     //		}
-    		else if(huart == &huart3)
-    		{
-           usart_rec_to_buff(&usart3_manage_obj, INTERRUPT_TYPE_DMA_HALF);
-    		}
+    //		else if(huart == &huart3)
+    //		{
+    //        usart_rec_to_buff(&usart3_manage_obj, INTERRUPT_TYPE_DMA_HALF);
+    //		}
+    else if(huart == &huart1)
+    {
+        usart_rec_to_buff(&usart1_manage_obj, INTERRUPT_TYPE_DMA_HALF);
+    }
 
     return;
 }
@@ -448,10 +452,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     //    {
     //        usart_rec_to_buff(&usart2_manage_obj, INTERRUPT_TYPE_DMA_ALL);
     //    }
-       else if (huart == &huart3)
-       {
-           usart_rec_to_buff(&usart3_manage_obj, INTERRUPT_TYPE_DMA_ALL);
-       }
+    //    else if (huart == &huart3)
+    //    {
+    //        usart_rec_to_buff(&usart3_manage_obj, INTERRUPT_TYPE_DMA_ALL);
+    //    }
+    else if (huart == &huart1)
+    {
+        usart_rec_to_buff(&usart1_manage_obj, INTERRUPT_TYPE_DMA_ALL);
+    }
 
     return;
 }
