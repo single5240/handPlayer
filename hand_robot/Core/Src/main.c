@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "can.h"
 #include "dma.h"
 #include "rng.h"
 #include "usart.h"
@@ -103,6 +104,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_RNG_Init();
   MX_USART1_UART_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
   __enable_irq();
 //	SEGGER_RTT_printf(0,"RTT printf test! \r\n");
