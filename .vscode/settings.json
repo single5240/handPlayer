@@ -4,6 +4,12 @@
         "cmsis_os.h": "c",
         "proj_config.h": "c",
         "fifo.h": "c",
-        "segger_rtt.h": "c"
+        "segger_rtt.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "can.h": "c",
+        "main.h": "c",
+        "drv_motor.h": "c",
+        "my_pid.h": "c",
+        "struct_typedef.h": "c"
     }
 }

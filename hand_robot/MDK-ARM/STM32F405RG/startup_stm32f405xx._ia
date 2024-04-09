@@ -1,0 +1,6 @@
+--cpu Cortex-M4.fp.sp -g --apcs=interwork -I ../Core/Inc
+-I.\RTE\_STM32F405RG
+-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include
+-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+--pd "__UVISION_VERSION SETA 539" --pd "_RTE_ SETA 1" --pd "STM32F405xx SETA 1" --pd "_RTE_ SETA 1"
+--list startup_stm32f405xx.lst --xref -o stm32f405rg\startup_stm32f405xx.o --depend stm32f405rg\startup_stm32f405xx.d "startup_stm32f405xx.s"
