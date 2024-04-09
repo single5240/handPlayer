@@ -1,9 +1,9 @@
 /*
  * @Author: lhq
  * @Date: 2023-06-19 23:36:23
- * @LastEditors: lhq
- * @LastEditTime: 2023-08-03 16:30:01
- * @FilePath: \MDK-ARMe:\cube\SL_Receiver\components\support\proj_config.h
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-09 22:18:45
+ * @FilePath: \handPlayer\hand_robot\components\support\proj_config.h
  * @Description: 
  * 
  * Copyright (c) 2023 by lhq, All Rights Reserved. 
@@ -37,7 +37,7 @@ typedef uint8_t  u8;
 #define DEBUG_RTT 1
 #define DEBUG_UART 0
 
-#define DEBUG_LOG_SHELL_METHOD DEBUG_UART
+#define DEBUG_LOG_SHELL_METHOD DEBUG_RTT
 
 #ifdef __cplusplus
 }

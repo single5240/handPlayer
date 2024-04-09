@@ -74,7 +74,7 @@ uint32_t usart3_rx_callback(uint8_t *buff, uint16_t len)
 uint32_t usart1_rx_callback(uint8_t *buff, uint16_t len)
 {
 	// shell_interupt(buff, len);
-	usart1_transmit(buff, len);
+	__log_output(buff, len);
 	return 0;
 }
 
