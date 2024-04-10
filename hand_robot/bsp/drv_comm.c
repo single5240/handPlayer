@@ -5,6 +5,7 @@
 #include "log.h"
 motor_status_t finger_status;
 void rxDataHandler(uint8_t *buff, uint16_t len){
+	// log_i("rxdata:%d %d %d",buff[0],buff[1],buff[2]);
 	switch(buff[0]){
 		case CONTROL:
 		{
@@ -27,6 +28,9 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 				}
 				break;
 			}
+			if(buff[3] != buff[0]){
+			log_e("rx data end error!!!");
+		}
 		}
 		break;
 		case PARAMSET:
@@ -34,14 +38,19 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 
 		}
 		break;
+		case MODESET:
+		{
+			finger_status.motor_control_type = buff[1];
+			if(buff[2] != buff[0]){
+				log_e("rx data end error!!!");
+			}
+		}
+		break;
 		default:
 		{
 			log_e("rx data start error!!!");
 		}
 		break;
-		if(buff[3] != buff[0]){
-			log_e("rx data end error!!!");
-		}
 	}
 }
 

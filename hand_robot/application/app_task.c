@@ -87,9 +87,11 @@ static FsmTable_T fsm_table[] =
 		{EVENT_AUTOPARA_SUCCESS, 		STATE_AUTOPARA, 		fsm_auto_para_callback, 		STATE_READYWAIT},
 
 		{EVENT_ACTIVE_START, 			STATE_READYWAIT, 		fsm_active_start_callback, 		STATE_ACTIVECTL},
+		{EVENT_ACTIVE_START, 			STATE_PASSIVECTL, 		fsm_active_start_callback, 		STATE_ACTIVECTL},
 		{EVENT_ACTIVE_FINISH, 			STATE_ACTIVECTL, 		fsm_active_finish_callback, 	STATE_READYWAIT},
 
 		{EVENT_PASSIVE_START, 			STATE_READYWAIT, 		fsm_passive_start_callback, 	STATE_PASSIVECTL},
+		{EVENT_PASSIVE_START, 			STATE_ACTIVECTL, 		fsm_passive_start_callback, 	STATE_PASSIVECTL},
 		{EVENT_PASSIVE_FINISH, 			STATE_PASSIVECTL, 		fsm_passive_finish_callback, 	STATE_READYWAIT},
 
 		{EVENT_PARARESET_START, 		STATE_READYWAIT, 		fsm_para_set_callback, 			STATE_ONLINESET},
@@ -150,6 +152,7 @@ static void fsm_active_finish_callback(void *parm){
 	log_i("active_finish_callback");
 }
 static void fsm_passive_start_callback(void *parm){
+	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
     log_i("passive_start_callback");
 }
 static void fsm_passive_finish_callback(void *parm){
@@ -162,13 +165,21 @@ static void fsm_para_set_callback(void *parm){
     log_i("para_set_callback");
 }
 static void fsm_active_run_callback(void *parm){
-	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
-    // log_i("active_run_callback");
-
+	if(app_main_obj.finger_status->motor_control_type == ACTIVE){
+		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
+	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
+		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_START);
+	}
+	// log_i("active_run_callback");
 }
 
 static void fsm_passive_run_callback(void *parm){
-    log_i("passive_run_callback");
+	if(app_main_obj.finger_status->motor_control_type == ACTIVE){
+		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_START);
+	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
+		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
+	}
+	// log_i("passive_run_callback");
 }
 
 // /******************************** 状态函数 ********************************/
@@ -285,14 +296,14 @@ void AppTask(void const * argument)
 
 	app_main_obj.finger_status = get_finger_status_p();
 	log_i("App_Task_launch!");
-	for(;;)
+	for(;;) 
 	{
 		if(app_main_obj.fsm_eventHandle_f != NULL){
 			app_main_obj.fsm_eventHandle_f(&app_main_obj);
 		} else {
 			log_e("null pointer!");
 		}
-		osDelay(2000);
+		osDelay(20);
 	}
 }
 

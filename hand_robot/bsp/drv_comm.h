@@ -12,7 +12,7 @@ enum CMD_TYPE
 {
     CONTROL = 0x04, // 控制命令
     PARAMSET = 0x40, // 参数设置
-	PARADEND = 0x80, // 参数发送
+	MODESET = 0x80, // 参数发送
 };
 
 typedef enum {
