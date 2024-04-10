@@ -1162,6 +1162,11 @@
               <FileType>1</FileType>
               <FilePath>..\bsp\drv_motor.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\drv_comm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

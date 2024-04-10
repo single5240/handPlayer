@@ -3,7 +3,7 @@
 #include "main.h"
 #include "drv_uart.h"
 #include "letter_shell_task.h"
-
+#include "drv_comm.h"
 #include "event_mgr.h"
 #include "easyflash.h"
 
@@ -74,7 +74,7 @@ uint32_t usart3_rx_callback(uint8_t *buff, uint16_t len)
 uint32_t usart1_rx_callback(uint8_t *buff, uint16_t len)
 {
 	// shell_interupt(buff, len);
-	__log_output(buff, len);
+	rxDataHandler(buff, len);
 	return 0;
 }
 

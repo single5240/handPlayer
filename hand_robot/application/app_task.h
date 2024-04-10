@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-03-20 09:32:23
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-09 11:45:39
+ * @LastEditTime: 2024-04-10 20:00:39
  * @FilePath: \handPlayer\hand_robot\application\app_task.h
  * @Description: 
  * 
@@ -20,7 +20,7 @@ extern "C" {
 #include "fsm.h"
 #include "fifo.h"
 #include "drv_motor.h"
-
+#include "drv_comm.h"
 typedef struct app_obj{
 	/* 状态机相关 */
 	FSM_T fsm;
@@ -30,7 +30,9 @@ typedef struct app_obj{
 	void (*fsm_eventHandle_f)(void *this_p);
 	void (*fsm_eventUpdate_f)(void *this_p, uint8_t);
     
+	//电机控制结构体
 	motor_controller_t (*finger_controllers)[5];
+	motor_status_p finger_status;
 }app_obj_t, *app_obj_p;
 
 void *get_obj_p(void);

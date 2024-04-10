@@ -282,6 +282,8 @@ void AppTask(void const * argument)
 	aop_fsm_config(&app_main_obj);
 	app_main_obj.fsm_init_f(&app_main_obj, fsm_table, fsm_table_lenth, STATE_AUTOPARA);
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_AUTOPARA_SUCCESS);
+
+	app_main_obj.finger_status = get_finger_status_p();
 	log_i("App_Task_launch!");
 	for(;;)
 	{
