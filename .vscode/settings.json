@@ -18,6 +18,13 @@
         "init.h": "c",
         "offline_task.h": "c",
         "drv_comm.h": "c",
-        "easyflash.h": "c"
+        "easyflash.h": "c",
+        "array": "c",
+        "*.tcc": "c",
+        "memory": "c",
+        "istream": "c",
+        "tuple": "c",
+        "utility": "c",
+        "log_config.h": "c"
     }
 }

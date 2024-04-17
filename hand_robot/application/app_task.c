@@ -12,7 +12,7 @@ app_obj_t app_main_obj;
  *  @brief 状态机运行状态
  *
  */
-static enum {
+enum {
 	STATE_AUTOPARA = 0x00, //
 
 	STATE_READYWAIT,	//
@@ -22,13 +22,13 @@ static enum {
 	STATE_EMSTOP, //
 	STATE_ONLINESET, //
 
-} ;
+};
 
 /** @enum radio_trig_event_e
  *  @brief 状态机触发事件
  *
  */
-static enum {
+enum {
 	EVENT_AUTOPARA_SUCCESS,  //
 
 	EVENT_ACTIVE_START, //
@@ -169,16 +169,59 @@ static void fsm_active_run_callback(void *parm){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
 	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_START);
+		return;
 	}
+
+	if(app_main_obj.finger_status->motor_control_range == TOTAL){
+		//计算所有电机并驱动所有电机 todo
+
+		//统一发送can数据 todo
+
+	} else if(app_main_obj.finger_status->motor_control_range == SINGLE){
+		//遍历所有电机并驱动 todo
+		int i = 0;
+		for(i=0;i<5;i++){
+			switch(app_main_obj.finger_status->single_status[i])
+			{
+			case STOP:
+			{
+
+			}
+			break;
+			case CIRCUL:
+			{
+
+			}
+			break;
+			case STRETCH:
+			{
+
+			}
+			break;
+			case SHRINK:
+			{
+
+			}
+			break;
+			default:
+				log_i("Unknown status code!!!\r\n");
+			break;
+			}
+		}
+		//统一发送can数据 todo
+	}
+	
 	// log_i("active_run_callback");
 }
 
 static void fsm_passive_run_callback(void *parm){
 	if(app_main_obj.finger_status->motor_control_type == ACTIVE){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_START);
+		return;
 	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
 	}
+	//被动模式检测电机电流和位置 todo
 	// log_i("passive_run_callback");
 }
 
@@ -295,6 +338,7 @@ void AppTask(void const * argument)
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_AUTOPARA_SUCCESS);
 
 	app_main_obj.finger_status = get_finger_status_p();
+	app_main_obj.finger_controllers = get_finger_motor_controller_p();
 	log_i("App_Task_launch!");
 	for(;;) 
 	{

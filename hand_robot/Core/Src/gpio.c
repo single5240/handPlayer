@@ -58,8 +58,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, RJ45_LED_L2_Pin|USART2_TXEN_Pin|RJ45_LED_R2_Pin|RJ45_LED_L3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, RJ45_LED_L1_Pin|RJ45_LED_R1_Pin|USART1_TXEN_Pin|AN1_LED_Pin
-                          |AN2_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, USART1_TXEN_Pin|AN1_LED_Pin|AN2_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PCPin PCPin PCPin */
   GPIO_InitStruct.Pin = BLINK_LED_Pin|RJ45_LED_R3_Pin|USART3_TXEN_Pin;
@@ -75,10 +74,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
-                           PBPin */
-  GPIO_InitStruct.Pin = RJ45_LED_L1_Pin|RJ45_LED_R1_Pin|USART1_TXEN_Pin|AN1_LED_Pin
-                          |AN2_LED_Pin;
+  /*Configure GPIO pins : PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = USART1_TXEN_Pin|AN1_LED_Pin|AN2_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

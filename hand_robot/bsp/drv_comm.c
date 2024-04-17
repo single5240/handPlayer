@@ -1,3 +1,13 @@
+/*
+ * @Author: Vincent_Jiang jwslove40@163.com
+ * @Date: 2024-04-10 20:59:52
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-12 10:35:23
+ * @FilePath: \handPlayer\hand_robot\bsp\drv_comm.c
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 #include "drv_comm.h"
 #include "string.h"
 #define LOG_TAG "drv_comm"
@@ -35,7 +45,7 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 		break;
 		case PARAMSET:
 		{
-
+			
 		}
 		break;
 		case MODESET:

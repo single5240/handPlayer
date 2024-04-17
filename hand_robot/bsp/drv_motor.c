@@ -2,6 +2,10 @@
 #include "my_pid.h"
 #include "main.h"
 
+#define LOG_TAG "drv_motor"
+#define LOG_OUTPUT_LEVEL  LOG_INFO
+#include "log.h"
+
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 // motor data read
@@ -53,13 +57,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	switch (rx_header.StdId)
 	{
 		case FINGER0_MOTOR_ID:
-		{
-			get_motor_measure(&(motor_controllers[0].motor_measure), rx_data);
-			ws_cla_motor(&(motor_controllers[0].motor_measure));
+		case FINGER1_MOTOR_ID:
+		case FINGER2_MOTOR_ID:
+		case FINGER3_MOTOR_ID:
+		case FINGER4_MOTOR_ID:
+		{	
+			get_motor_measure(&(motor_controllers[rx_header.StdId-CAN_FINGER_ALL_ID-1].motor_measure), rx_data);
+			ws_cla_motor(&(motor_controllers[rx_header.StdId-CAN_FINGER_ALL_ID-1].motor_measure));
+			log_i("%d\r\n", rx_header.StdId);
 			break;
 		}
 		default:
 		{
+			log_i("Can rx Error!!!\r\n");
 			break;
 		}
 	}
@@ -84,15 +94,62 @@ void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mot
 	HAL_CAN_AddTxMessage(&FINGER_CAN, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
 }
 
+uint8_t motor_reset_positions(void){
+	
+}
+
 void motor_pid_init(void){
     PidInit(&(motor_controllers[0].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
     PidInit(&(motor_controllers[0].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+
+	// PidInit(&(motor_controllers[1].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
+    // PidInit(&(motor_controllers[1].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+
+	// PidInit(&(motor_controllers[2].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
+	// PidInit(&(motor_controllers[2].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+
+	// PidInit(&(motor_controllers[3].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
+	// PidInit(&(motor_controllers[3].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+
+	// PidInit(&(motor_controllers[4].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
+	// PidInit(&(motor_controllers[4].position_pid), 0.1,      0,  0.00,  300,   0,  50);
 }
 
-motor_controller_t* get_finger_motor_controller_p(int index)
+motor_controller_t (*get_finger_motor_controller_p(void))[5]
 {
-    return motor_controllers;
+    return &motor_controllers;
 }
 
 
+
+#include "main.h"
+
+
+extern CAN_HandleTypeDef hcan1;
+extern CAN_HandleTypeDef hcan2;
+
+void can_filter_init(void)
+{
+
+    CAN_FilterTypeDef can_filter_st;
+    can_filter_st.FilterActivation = ENABLE;
+    can_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
+    can_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
+    can_filter_st.FilterIdHigh = 0x0000;
+    can_filter_st.FilterIdLow = 0x0000;
+    can_filter_st.FilterMaskIdHigh = 0x0000;
+    can_filter_st.FilterMaskIdLow = 0x0000;
+    can_filter_st.FilterBank = 0;
+    can_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
+    HAL_CAN_ConfigFilter(&hcan1, &can_filter_st);
+    HAL_CAN_Start(&hcan1);
+    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+
+
+    can_filter_st.SlaveStartFilterBank = 14;
+    can_filter_st.FilterBank = 14;
+    HAL_CAN_ConfigFilter(&hcan2, &can_filter_st);
+    HAL_CAN_Start(&hcan2);
+    HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
+}
 

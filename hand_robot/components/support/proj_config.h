@@ -2,7 +2,7 @@
  * @Author: lhq
  * @Date: 2023-06-19 23:36:23
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-09 22:18:45
+ * @LastEditTime: 2024-04-15 22:00:42
  * @FilePath: \handPlayer\hand_robot\components\support\proj_config.h
  * @Description: 
  * 

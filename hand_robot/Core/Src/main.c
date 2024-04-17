@@ -31,7 +31,7 @@
 #include "SEGGER_SYSVIEW.h"
 #include "SEGGER_RTT.h"
 #include "init.h"
-
+#include "drv_motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,8 +105,10 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   MX_CAN1_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
   __enable_irq();
+  can_filter_init();
 //	SEGGER_RTT_printf(0,"RTT printf test! \r\n");
 	// printf(RTT_CTRL_BG_BRIGHT_GREEN RTT_CTRL_TEXT_BRIGHT_RED"app is running!\r\n");
 	// printf(RTT_CTRL_RESET);
