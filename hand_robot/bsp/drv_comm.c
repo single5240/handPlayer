@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-04-10 20:59:52
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-12 10:35:23
+ * @LastEditTime: 2024-04-18 15:27:06
  * @FilePath: \handPlayer\hand_robot\bsp\drv_comm.c
  * @Description: 
  * 
@@ -67,4 +67,7 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 motor_status_p get_finger_status_p(){
 	return &finger_status;
 }
+
+
+
 

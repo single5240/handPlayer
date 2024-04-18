@@ -175,39 +175,8 @@ static void fsm_active_run_callback(void *parm){
 	if(app_main_obj.finger_status->motor_control_range == TOTAL){
 		all_motor_controller(app_main_obj.finger_status->totaol_status);
 	} else if(app_main_obj.finger_status->motor_control_range == SINGLE){
-		//遍历所有电机并驱动 todo
-		int i = 0;
-		for(i=0;i<5;i++){
-			switch(app_main_obj.finger_status->single_status[i])
-			{
-			case STOP:
-			{
-
-			}
-			break;
-			case CIRCUL:
-			{
-
-			}
-			break;
-			case STRETCH:
-			{
-
-			}
-			break;
-			case SHRINK:
-			{
-
-			}
-			break;
-			default:
-				log_i("Unknown status code!!!\r\n");
-			break;
-			}
-		}
-		//统一发送can数据 todo
+		single_motor_controller(app_main_obj.finger_status->single_status);
 	}
-	
 	// log_i("active_run_callback");
 }
 
@@ -218,7 +187,8 @@ static void fsm_passive_run_callback(void *parm){
 	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
 	}
-	//被动模式检测电机电流和位置 todo
+	//jws_todo
+	//被动模式检测电机电流和位置
 	// log_i("passive_run_callback");
 }
 
@@ -344,7 +314,7 @@ void AppTask(void const * argument)
 		} else {
 			log_e("null pointer!");
 		}
-		osDelay(20);
+		osDelay(5);
 	}
 }
 

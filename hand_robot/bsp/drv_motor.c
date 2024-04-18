@@ -193,8 +193,7 @@ void can_filter_init(void)
 
 void all_motor_control_circul(void)
 {
-	static uint8_t control_flag = 0;
-	switch (control_flag)
+	switch (motor_controllers->all_motor_circul_flag)
 	{
 	case 0:
 	{
@@ -203,7 +202,7 @@ void all_motor_control_circul(void)
 		motor_controllers[2].motor_measure.set_totall_ecd = -10 * 8192;
 		motor_controllers[3].motor_measure.set_totall_ecd = -10 * 8192;
 		motor_controllers[4].motor_measure.set_totall_ecd = -10 * 8192;
-		control_flag = 1;
+		motor_controllers->all_motor_circul_flag = 1;
 		log_i("control_flag:1\r\n");
 		break;
 	}
@@ -211,7 +210,7 @@ void all_motor_control_circul(void)
 	{
 		if (motor_controllers[0].motor_measure.actual_angle <= -90 && motor_controllers[1].motor_measure.actual_angle <= -90 && motor_controllers[2].motor_measure.actual_angle <= -90 && motor_controllers[3].motor_measure.actual_angle <= -90 && motor_controllers[4].motor_measure.actual_angle <= -90)
 		{
-			control_flag = 2;
+			motor_controllers->all_motor_circul_flag = 2;
 			log_i("control_flag:2\r\n");
 		}
 		break;
@@ -223,7 +222,7 @@ void all_motor_control_circul(void)
 		motor_controllers[2].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[3].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[4].motor_measure.set_totall_ecd = 8192;
-		control_flag = 3;
+		motor_controllers->all_motor_circul_flag = 3;
 		log_i("control_flag:3\r\n");
 		break;
 	}
@@ -231,7 +230,7 @@ void all_motor_control_circul(void)
 	{
 		if (motor_controllers[0].motor_measure.actual_angle >= 0 && motor_controllers[1].motor_measure.actual_angle >= 0 && motor_controllers[2].motor_measure.actual_angle >= 0 && motor_controllers[3].motor_measure.actual_angle >= 0 && motor_controllers[4].motor_measure.actual_angle >= 0)
 		{
-			control_flag = 0;
+			motor_controllers->all_motor_circul_flag = 0;
 			log_i("control_flag:0\r\n");
 		}
 		break;
@@ -301,4 +300,71 @@ void all_motor_controller(uint8_t cmd)
 	default:
 		break;
 	}
+}
+
+
+void single_motor_control_circul(uint8_t motor_number){
+	switch (motor_controllers->single_motor_circul_flag[motor_number]){
+		case 0:
+        {
+            motor_controllers[0].motor_measure.set_totall_ecd = -10 * 8192;
+            motor_controllers->single_motor_circul_flag[motor_number] = 1;
+            log_i("%dcontrol_flag_single:1\r\n", motor_number);
+            break;
+        }
+        case 1:
+		{
+			if (motor_controllers[0].motor_measure.actual_angle <= -90){
+				motor_controllers->single_motor_circul_flag[motor_number] = 2;
+                log_i("%dcontrol_flag_single:2\r\n", motor_number);
+			}
+			break;
+		}
+		case 2:
+		{
+			motor_controllers[0].motor_measure.set_totall_ecd = 8192;
+            motor_controllers->single_motor_circul_flag[motor_number] = 3;
+            log_i("%dcontrol_flag_single:3\r\n", motor_number);
+            break;
+        }
+        case 3:{
+            if (motor_controllers[0].motor_measure.actual_angle >= 0){
+                motor_controllers->single_motor_circul_flag[motor_number] = 0;
+                log_i("%dcontrol_flag_single:0\r\n", motor_number);
+            }
+            break;
+		}
+	}
+}
+
+void single_motor_controller(FINGLE_STATUS status[])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		switch (status[i])
+		{
+		case STOP:
+			motor_controllers[i].motor_measure.set_current = 0;
+			break;
+		case CIRCUL:
+			single_motor_control_circul(i);
+			break;
+		case STRETCH:
+			motor_controllers[i].motor_measure.set_totall_ecd = 8192;
+			motor_controllers[i].motor_measure.set_speed = PidCalculate(&motor_controllers[i].position_pid, motor_controllers[i].motor_measure.set_totall_ecd, motor_controllers[i].motor_measure.totall_ecd);
+			motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
+			break;
+		case SHRINK:
+			motor_controllers[0].motor_measure.set_totall_ecd = -10 * 8192;
+			motor_controllers[i].motor_measure.set_speed = PidCalculate(&motor_controllers[i].position_pid, motor_controllers[i].motor_measure.set_totall_ecd, motor_controllers[i].motor_measure.totall_ecd);
+			motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
+			break;
+		default:
+			break;
+		}
+	}
+	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, motor_controllers[0].motor_measure.set_current, motor_controllers[1].motor_measure.set_current,
+                    motor_controllers[2].motor_measure.set_current, motor_controllers[3].motor_measure.set_current);
+	HAL_Delay(1);
+	CAN_cmd_chassis(FINGER4_4_MOTOR_ID, motor_controllers[4].motor_measure.set_current, 0, 0, 0);
 }

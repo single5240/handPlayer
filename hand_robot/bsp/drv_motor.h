@@ -46,6 +46,9 @@ typedef struct
     motor_measure_t motor_measure;
     pid_parameter_t speed_pid;
     pid_parameter_t position_pid;
+
+    uint8_t all_motor_circul_flag;
+    uint8_t single_motor_circul_flag[5];
 } motor_controller_t;
 void all_motor_cal_send(void);
 void all_motor_stop(void);

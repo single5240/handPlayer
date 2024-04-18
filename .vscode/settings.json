@@ -26,5 +26,6 @@
         "tuple": "c",
         "utility": "c",
         "log_config.h": "c"
-    }
+    },
+    "todo-tree.tree.scanMode": "workspace only"
 }
