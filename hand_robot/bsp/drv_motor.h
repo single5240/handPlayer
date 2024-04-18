@@ -22,7 +22,8 @@ extern "C"
         FINGER4_MOTOR_ID = 0x205,
 
     } can_msg_id_e;
-#define FINGER_MOTOR_ID 0x0200
+#define FINGER0_3_MOTOR_ID 0x200
+#define FINGER4_4_MOTOR_ID 0x1ff
 #define FINGER_CAN hcan2
     typedef struct
     {
@@ -47,7 +48,7 @@ extern "C"
         pid_parameter_t position_pid;
     }motor_controller_t;
 
-    void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+    void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
     void motor_pid_init(void);
     motor_controller_t (*get_finger_motor_controller_p(void))[5];
     void can_filter_init(void);

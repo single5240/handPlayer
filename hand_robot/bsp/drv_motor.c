@@ -75,7 +75,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	}
 }
 
-void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
+void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
 	uint32_t send_mail_box;
 	chassis_tx_message.StdId = CAN_FINGER_ALL_ID;
@@ -95,6 +95,38 @@ void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mot
 }
 
 uint8_t motor_reset_positions(void){
+	int icount[5] = {50,50,50,50,50};
+	int last_roll[5] = {0};
+	int done = 5;
+	motor_controllers[0].motor_measure.set_speed = 1500;
+	motor_controllers[1].motor_measure.set_speed = 1500;
+	motor_controllers[2].motor_measure.set_speed = 1500;
+	motor_controllers[3].motor_measure.set_speed = 1500;
+	motor_controllers[4].motor_measure.set_speed = 1500;
+	while(done != 0){
+		for(int i = 0; i <5; i++){
+			if(icount[i]>0){
+				motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
+				if(motor_controllers[i].motor_measure.rolls == last_roll[i]){
+					icount[i]--;
+					if(icount[i] == 0){
+						done--;
+					}
+				}
+				last_roll[i] = motor_controllers[i].motor_measure.rolls;
+			} else {
+				motor_controllers[i].motor_measure.set_current = 0;
+				motor_controllers[i].motor_measure.rolls = 0;
+			}
+		}
+		CAN_cmd_chassis(FINGER0_3_MOTOR_ID, motor_controllers[0].motor_measure.set_current, motor_controllers[1].motor_measure.set_current,
+			motor_controllers[2].motor_measure.set_current, motor_controllers[3].motor_measure.set_current);
+		HAL_Delay(10);
+		CAN_cmd_chassis(FINGER4_4_MOTOR_ID, motor_controllers[4].motor_measure.set_current, 0, 0, 0);
+	}
+	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, 0, 0, 0, 0);
+	CAN_cmd_chassis(FINGER4_4_MOTOR_ID, 0, 0, 0, 0);
+
 	
 }
 
