@@ -1,9 +1,10 @@
 #include "drv_motor.h"
 #include "my_pid.h"
 #include "main.h"
+#include "drv_comm.h"
 
 #define LOG_TAG "drv_motor"
-#define LOG_OUTPUT_LEVEL  LOG_INFO
+#define LOG_OUTPUT_LEVEL LOG_INFO
 #include "log.h"
 
 extern CAN_HandleTypeDef hcan1;
@@ -56,29 +57,29 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 	switch (rx_header.StdId)
 	{
-		case FINGER0_MOTOR_ID:
-		case FINGER1_MOTOR_ID:
-		case FINGER2_MOTOR_ID:
-		case FINGER3_MOTOR_ID:
-		case FINGER4_MOTOR_ID:
-		{	
-			get_motor_measure(&(motor_controllers[rx_header.StdId-CAN_FINGER_ALL_ID-1].motor_measure), rx_data);
-			ws_cla_motor(&(motor_controllers[rx_header.StdId-CAN_FINGER_ALL_ID-1].motor_measure));
-			log_i("%d\r\n", rx_header.StdId);
-			break;
-		}
-		default:
-		{
-			log_i("Can rx Error!!!\r\n");
-			break;
-		}
+	case FINGER0_MOTOR_ID:
+	case FINGER1_MOTOR_ID:
+	case FINGER2_MOTOR_ID:
+	case FINGER3_MOTOR_ID:
+	case FINGER4_MOTOR_ID:
+	{
+		get_motor_measure(&(motor_controllers[rx_header.StdId - CAN_FINGER_ALL_ID - 1].motor_measure), rx_data);
+		ws_cla_motor(&(motor_controllers[rx_header.StdId - CAN_FINGER_ALL_ID - 1].motor_measure));
+		log_i("%d\r\n", rx_header.StdId);
+		break;
+	}
+	default:
+	{
+		log_i("Can rx Error!!!\r\n");
+		break;
+	}
 	}
 }
 
 void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
 	uint32_t send_mail_box;
-	chassis_tx_message.StdId = CAN_FINGER_ALL_ID;
+	chassis_tx_message.StdId = StdId;
 	chassis_tx_message.IDE = CAN_ID_STD;
 	chassis_tx_message.RTR = CAN_RTR_DATA;
 	chassis_tx_message.DLC = 0x08;
@@ -94,8 +95,9 @@ void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t mot
 	HAL_CAN_AddTxMessage(&FINGER_CAN, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
 }
 
-uint8_t motor_reset_positions(void){
-	int icount[5] = {50,50,50,50,50};
+uint8_t motor_reset_positions(void)
+{
+	int icount[5] = {50, 50, 50, 50, 50};
 	int last_roll[5] = {0};
 	int done = 5;
 	motor_controllers[0].motor_measure.set_speed = 1500;
@@ -103,39 +105,47 @@ uint8_t motor_reset_positions(void){
 	motor_controllers[2].motor_measure.set_speed = 1500;
 	motor_controllers[3].motor_measure.set_speed = 1500;
 	motor_controllers[4].motor_measure.set_speed = 1500;
-	while(done != 0){
-		for(int i = 0; i <5; i++){
-			if(icount[i]>0){
+	while (done != 0)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (icount[i] > 0)
+			{
 				motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
-				if(motor_controllers[i].motor_measure.rolls == last_roll[i]){
+				if (motor_controllers[i].motor_measure.rolls == last_roll[i])
+				{
 					icount[i]--;
-					if(icount[i] == 0){
+					if (icount[i] == 0)
+					{
 						done--;
 					}
 				}
 				last_roll[i] = motor_controllers[i].motor_measure.rolls;
-			} else {
+			}
+			else
+			{
 				motor_controllers[i].motor_measure.set_current = 0;
 				motor_controllers[i].motor_measure.rolls = 0;
 			}
 		}
 		CAN_cmd_chassis(FINGER0_3_MOTOR_ID, motor_controllers[0].motor_measure.set_current, motor_controllers[1].motor_measure.set_current,
-			motor_controllers[2].motor_measure.set_current, motor_controllers[3].motor_measure.set_current);
+						motor_controllers[2].motor_measure.set_current, motor_controllers[3].motor_measure.set_current);
 		HAL_Delay(10);
 		CAN_cmd_chassis(FINGER4_4_MOTOR_ID, motor_controllers[4].motor_measure.set_current, 0, 0, 0);
 	}
 	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, 0, 0, 0, 0);
 	CAN_cmd_chassis(FINGER4_4_MOTOR_ID, 0, 0, 0, 0);
 
-	
+	return 0;
 }
 
-void motor_pid_init(void){
-    PidInit(&(motor_controllers[0].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
-    PidInit(&(motor_controllers[0].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+void motor_pid_init(void)
+{
+	PidInit(&(motor_controllers[0].speed_pid), 7, 0.004, 0.01, 2000, 300, 200);
+	PidInit(&(motor_controllers[0].position_pid), 0.1, 0, 0.00, 300, 0, 50);
 
 	// PidInit(&(motor_controllers[1].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
-    // PidInit(&(motor_controllers[1].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+	// PidInit(&(motor_controllers[1].position_pid), 0.1,      0,  0.00,  300,   0,  50);
 
 	// PidInit(&(motor_controllers[2].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
 	// PidInit(&(motor_controllers[2].position_pid), 0.1,      0,  0.00,  300,   0,  50);
@@ -149,13 +159,10 @@ void motor_pid_init(void){
 
 motor_controller_t (*get_finger_motor_controller_p(void))[5]
 {
-    return &motor_controllers;
+	return &motor_controllers;
 }
 
-
-
 #include "main.h"
-
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
@@ -163,25 +170,135 @@ extern CAN_HandleTypeDef hcan2;
 void can_filter_init(void)
 {
 
-    CAN_FilterTypeDef can_filter_st;
-    can_filter_st.FilterActivation = ENABLE;
-    can_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
-    can_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
-    can_filter_st.FilterIdHigh = 0x0000;
-    can_filter_st.FilterIdLow = 0x0000;
-    can_filter_st.FilterMaskIdHigh = 0x0000;
-    can_filter_st.FilterMaskIdLow = 0x0000;
-    can_filter_st.FilterBank = 0;
-    can_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
-    HAL_CAN_ConfigFilter(&hcan1, &can_filter_st);
-    HAL_CAN_Start(&hcan1);
-    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+	CAN_FilterTypeDef can_filter_st;
+	can_filter_st.FilterActivation = ENABLE;
+	can_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
+	can_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
+	can_filter_st.FilterIdHigh = 0x0000;
+	can_filter_st.FilterIdLow = 0x0000;
+	can_filter_st.FilterMaskIdHigh = 0x0000;
+	can_filter_st.FilterMaskIdLow = 0x0000;
+	can_filter_st.FilterBank = 0;
+	can_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
+	HAL_CAN_ConfigFilter(&hcan1, &can_filter_st);
+	HAL_CAN_Start(&hcan1);
+	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 
-
-    can_filter_st.SlaveStartFilterBank = 14;
-    can_filter_st.FilterBank = 14;
-    HAL_CAN_ConfigFilter(&hcan2, &can_filter_st);
-    HAL_CAN_Start(&hcan2);
-    HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
+	can_filter_st.SlaveStartFilterBank = 14;
+	can_filter_st.FilterBank = 14;
+	HAL_CAN_ConfigFilter(&hcan2, &can_filter_st);
+	HAL_CAN_Start(&hcan2);
+	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
+void all_motor_control_circul(void)
+{
+	static uint8_t control_flag = 0;
+	switch (control_flag)
+	{
+	case 0:
+	{
+		motor_controllers[0].motor_measure.set_totall_ecd = -10 * 8192;
+		motor_controllers[1].motor_measure.set_totall_ecd = -10 * 8192;
+		motor_controllers[2].motor_measure.set_totall_ecd = -10 * 8192;
+		motor_controllers[3].motor_measure.set_totall_ecd = -10 * 8192;
+		motor_controllers[4].motor_measure.set_totall_ecd = -10 * 8192;
+		control_flag = 1;
+		log_i("control_flag:1\r\n");
+		break;
+	}
+	case 1:
+	{
+		if (motor_controllers[0].motor_measure.actual_angle <= -90 && motor_controllers[1].motor_measure.actual_angle <= -90 && motor_controllers[2].motor_measure.actual_angle <= -90 && motor_controllers[3].motor_measure.actual_angle <= -90 && motor_controllers[4].motor_measure.actual_angle <= -90)
+		{
+			control_flag = 2;
+			log_i("control_flag:2\r\n");
+		}
+		break;
+	}
+	case 2:
+	{
+		motor_controllers[0].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[1].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[2].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[3].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[4].motor_measure.set_totall_ecd = 8192;
+		control_flag = 3;
+		log_i("control_flag:3\r\n");
+		break;
+	}
+	case 3:
+	{
+		if (motor_controllers[0].motor_measure.actual_angle >= 0 && motor_controllers[1].motor_measure.actual_angle >= 0 && motor_controllers[2].motor_measure.actual_angle >= 0 && motor_controllers[3].motor_measure.actual_angle >= 0 && motor_controllers[4].motor_measure.actual_angle >= 0)
+		{
+			control_flag = 0;
+			log_i("control_flag:0\r\n");
+		}
+		break;
+	}
+	default:
+		log_i("error: unknown\r\n");
+		break;
+	}
+	all_motor_cal_send();
+}
+
+void all_motor_cal_send(void)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		motor_controllers[i].motor_measure.set_speed = PidCalculate(&motor_controllers[i].position_pid, motor_controllers[i].motor_measure.set_totall_ecd, motor_controllers[i].motor_measure.totall_ecd);
+		motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
+	}
+	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, motor_controllers[0].motor_measure.set_current, motor_controllers[1].motor_measure.set_current,
+					motor_controllers[2].motor_measure.set_current, motor_controllers[3].motor_measure.set_current);
+	HAL_Delay(1);
+	CAN_cmd_chassis(FINGER4_4_MOTOR_ID, motor_controllers[4].motor_measure.set_current, 0, 0, 0);
+}
+
+void all_motor_stretch(void)
+{
+	motor_controllers[0].motor_measure.set_totall_ecd = 8192;
+	motor_controllers[1].motor_measure.set_totall_ecd = 8192;
+	motor_controllers[2].motor_measure.set_totall_ecd = 8192;
+	motor_controllers[3].motor_measure.set_totall_ecd = 8192;
+	motor_controllers[4].motor_measure.set_totall_ecd = 8192;
+	all_motor_cal_send();
+}
+
+void all_motor_shrink(void)
+{
+	motor_controllers[0].motor_measure.set_totall_ecd = -10 * 8192;
+	motor_controllers[1].motor_measure.set_totall_ecd = -10 * 8192;
+	motor_controllers[2].motor_measure.set_totall_ecd = -10 * 8192;
+	motor_controllers[3].motor_measure.set_totall_ecd = -10 * 8192;
+	motor_controllers[4].motor_measure.set_totall_ecd = -10 * 8192;
+	all_motor_cal_send();
+}
+
+void all_motor_stop(void)
+{
+	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, 0, 0, 0, 0);
+	CAN_cmd_chassis(FINGER0_3_MOTOR_ID, 0, 0, 0, 0);
+}
+
+void all_motor_controller(uint8_t cmd)
+{
+	switch (cmd)
+	{
+	case STOP:
+		all_motor_stop();
+		break;
+	case CIRCUL:
+		all_motor_control_circul();
+		break;
+	case STRETCH:
+		all_motor_stretch();
+		break;
+	case SHRINK:
+		all_motor_shrink();
+		break;
+	default:
+		break;
+	}
+}

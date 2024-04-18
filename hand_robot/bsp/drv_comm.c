@@ -67,3 +67,4 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 motor_status_p get_finger_status_p(){
 	return &finger_status;
 }
+

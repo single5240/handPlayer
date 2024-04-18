@@ -173,10 +173,7 @@ static void fsm_active_run_callback(void *parm){
 	}
 
 	if(app_main_obj.finger_status->motor_control_range == TOTAL){
-		//计算所有电机并驱动所有电机 todo
-
-		//统一发送can数据 todo
-
+		all_motor_controller(app_main_obj.finger_status->totaol_status);
 	} else if(app_main_obj.finger_status->motor_control_range == SINGLE){
 		//遍历所有电机并驱动 todo
 		int i = 0;
