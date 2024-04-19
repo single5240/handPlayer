@@ -22,6 +22,7 @@
 #include "can.h"
 #include "dma.h"
 #include "rng.h"
+#include "tim.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -32,6 +33,10 @@
 #include "SEGGER_RTT.h"
 #include "init.h"
 #include "drv_motor.h"
+
+#define LOG_TAG "main"
+#define LOG_OUTPUT_LEVEL LOG_INFO
+#include "log.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +69,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+extern TIM_HandleTypeDef htim2;
 /* USER CODE END 0 */
 
 /**
@@ -106,9 +111,11 @@ int main(void)
   MX_USART1_UART_Init();
   MX_CAN1_Init();
   MX_CAN2_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   __enable_irq();
   can_filter_init();
+  HAL_TIM_Base_Start_IT(&htim2);
 //	SEGGER_RTT_printf(0,"RTT printf test! \r\n");
 	// printf(RTT_CTRL_BG_BRIGHT_GREEN RTT_CTRL_TEXT_BRIGHT_RED"app is running!\r\n");
 	// printf(RTT_CTRL_RESET);
@@ -199,7 +206,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if (htim->Instance == TIM2) {
 
+  }
   /* USER CODE END Callback 1 */
 }
 

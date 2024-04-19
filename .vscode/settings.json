@@ -25,7 +25,8 @@
         "istream": "c",
         "tuple": "c",
         "utility": "c",
-        "log_config.h": "c"
+        "log_config.h": "c",
+        "monitor_task.h": "c"
     },
     "todo-tree.tree.scanMode": "workspace only"
 }
