@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-04-10 20:59:52
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-18 15:27:06
+ * @LastEditTime: 2024-04-19 14:38:29
  * @FilePath: \handPlayer\hand_robot\bsp\drv_comm.c
  * @Description: 
  * 
@@ -32,6 +32,7 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 				case MIDDLE:
 				case RING:
 				case LITTLE:
+				case SINGLEFINGER:
 				{
 					finger_status.motor_control_range = SINGLE;
 					finger_status.single_status[buff[1]] = buff[2]; 
@@ -62,6 +63,7 @@ void rxDataHandler(uint8_t *buff, uint16_t len){
 		}
 		break;
 	}
+	usart1_transmit(buff, len);
 }
 
 motor_status_p get_finger_status_p(){

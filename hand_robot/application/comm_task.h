@@ -9,7 +9,7 @@ extern "C" {
 #include "proj_config.h"
 
 void Comm_Task(void const * argument);
-
+void sendData(uint8_t *data);
 
 
 

@@ -64,10 +64,9 @@ uint32_t usart2_rx_callback(uint8_t *buff, uint16_t len)
 
 	return 0;
 }
-
+uint8_t usartFlag  = 0;
 uint32_t usart3_rx_callback(uint8_t *buff, uint16_t len)
 {
-	
 	return 0;
 }
 

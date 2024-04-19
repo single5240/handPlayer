@@ -33,6 +33,7 @@ enum FINGER_INDEX
     RING = 3, // 无名指
     LITTLE = 4, // 小指
     TOTAlFINGER =5, // 全部手指
+    SINGLEFINGER =6, // 单个手指
 };
 
 typedef enum 
