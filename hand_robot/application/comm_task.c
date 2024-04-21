@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-03-19 10:16:12
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-19 14:31:41
+ * @LastEditTime: 2024-04-21 19:54:33
  * @FilePath: \handPlayer\hand_robot\application\comm_task.c
  * @Description: 
  * 
@@ -52,9 +52,10 @@ void Comm_Task(void const *argument)
 				sendData("DC32(50,70,'Range:Single',4);\r\n");
 			}
 		}
-		
+		sendMotorData();
 		last_status[0] = finger_status_comm->motor_control_type;
 		last_status[1] = finger_status_comm->motor_control_range;
+		HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
 		osDelayUntil(&period, 50);
 	}
 }

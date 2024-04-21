@@ -26,7 +26,10 @@
         "tuple": "c",
         "utility": "c",
         "log_config.h": "c",
-        "monitor_task.h": "c"
+        "monitor_task.h": "c",
+        "limits": "c",
+        "gpio.h": "c",
+        "winapifamily.h": "c"
     },
     "todo-tree.tree.scanMode": "workspace only"
 }

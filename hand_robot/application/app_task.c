@@ -145,6 +145,9 @@ static void fsm_auto_para_callback(void *parm){
 	log_i("auto_para_callback");
 }
 static void fsm_active_start_callback(void *parm){
+	app_main_obj.finger_controllers[0]->all_motor_circul_flag = 0;
+	app_main_obj.finger_controllers[0]->passive_control_flag = 0;
+	memset(app_main_obj.finger_controllers[0]->single_motor_circul_flag, 0, 5);
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_ACTIVE_RUNNING);
 	log_i("active_start_callback");
 }
@@ -152,6 +155,9 @@ static void fsm_active_finish_callback(void *parm){
 	log_i("active_finish_callback");
 }
 static void fsm_passive_start_callback(void *parm){
+	app_main_obj.finger_controllers[0]->all_motor_circul_flag = 0;
+	app_main_obj.finger_controllers[0]->passive_control_flag = 0;
+	memset(app_main_obj.finger_controllers[0]->single_motor_circul_flag, 0, 5);
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
     log_i("passive_start_callback");
 }

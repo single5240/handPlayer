@@ -34,6 +34,7 @@ void ws_cla_motor(motor_measure_t *motor_m_t)
 	{
 		motor_m_t->rolls++;
 	}
+	motor_m_t->last_angle = motor_m_t->actual_angle;
 	motor_m_t->actual_angle = motor_m_t->rolls * 360 / 36;
 	motor_m_t->totall_ecd = motor_m_t->rolls * 8192 + motor_m_t->ecd;
 }
@@ -118,6 +119,10 @@ uint8_t motor_reset_positions(void)
 					if (icount[i] == 0)
 					{
 						done--;
+						if(done == 0){
+							motor_controllers[i].motor_measure.set_current = 0;
+							motor_controllers[i].motor_measure.rolls = 0;
+						}
 					}
 				}
 				last_roll[i] = motor_controllers[i].motor_measure.rolls;
@@ -368,3 +373,48 @@ void single_motor_controller(FINGLE_STATUS status[])
 	HAL_Delay(1);
 	CAN_cmd_chassis(FINGER4_4_MOTOR_ID, motor_controllers[4].motor_measure.set_current, 0, 0, 0);
 }
+
+void passive_controller(void){
+	switch(motor_controllers->passive_control_flag)
+	{
+		case 0:
+	    {
+			if(motor_controllers[0].motor_measure.last_angle != motor_controllers[0].motor_measure.actual_angle
+						|| motor_controllers[1].motor_measure.last_angle != motor_controllers[1].motor_measure.actual_angle
+						|| motor_controllers[2].motor_measure.last_angle != motor_controllers[2].motor_measure.actual_angle
+						|| motor_controllers[3].motor_measure.last_angle != motor_controllers[3].motor_measure.actual_angle
+						|| motor_controllers[4].motor_measure.last_angle != motor_controllers[4].motor_measure.actual_angle){
+				 motor_controllers->passive_control_flag = 1;
+			}
+            break;
+        }
+		case 1:
+		{
+			all_motor_control_circul();
+            break;
+		}
+		case 2:
+		{
+            break;
+		}
+		default:
+			log_i("Unknown flag: %d\r\n", motor_controllers->passive_control_flag);
+		    break;
+	}
+}
+
+uint8_t data_send_motor[] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+void sendMotorData(void){
+	for(int i=0;i<5;i++){
+		data_send_motor[i+1] = (uint8_t)motor_controllers[i].motor_measure.actual_angle;
+		// data_send_motor[i+1] += i;
+		// if(data_send_motor[i+1]>=90) 
+		// 	data_send_motor[i+1] = 0; 
+	}
+	for(int j=0;j<5;j++){
+		data_send_motor[j+6] = (uint8_t)(motor_controllers[j].motor_measure.given_current/1000);
+		// data_send_motor[j+6] = j*10;
+	}
+	usart1_transmit(data_send_motor, 11);
+}
+

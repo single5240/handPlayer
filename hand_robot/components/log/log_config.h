@@ -2,7 +2,7 @@
  * @Author: Vincent_Jiang jwslove40@163.com
  * @Date: 2024-03-19 10:16:12
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-16 20:34:42
+ * @LastEditTime: 2024-04-20 16:37:52
  * @FilePath: \handPlayer\hand_robot\components\log\log_config.h
  * @Description: 
  * 
@@ -40,8 +40,8 @@ extern "C" {
 #if DEBUG_LOG_SHELL_METHOD
 #define __log_output(log_str, len) do{SEGGER_RTT_Write(0,(const char*)log_str,len);}while(0)
 #else
-// #define __log_output(log_str, len) do{uart5_transmit((uint8_t*)log_str, len);}while(0)
-#define __log_output(log_str, len) do{CDC_Transmit_FS((uint8_t*)log_str, len);}while(0)
+#define __log_output(log_str, len) do{usart1_transmit((uint8_t*)log_str, len);}while(0)
+// #define __log_output(log_str, len) do{CDC_Transmit_FS((uint8_t*)log_str, len);}while(0)
 
 #endif
 

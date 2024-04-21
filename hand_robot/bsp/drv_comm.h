@@ -1,3 +1,13 @@
+/*
+ * @Author: Vincent_Jiang jwslove40@163.com
+ * @Date: 2024-04-10 17:20:05
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-21 20:25:45
+ * @FilePath: \handPlayer\hand_robot\bsp\drv_comm.h
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 #ifndef __DRV_COMM_H__
 #define __DRV_COMM_H__
 
@@ -50,15 +60,18 @@ typedef struct {
 	CONTROL_RANGE motor_control_range; //0-全部 1-单个
 	FINGLE_STATUS totaol_status; // 0-停止 1-循环 2-伸展 3-收缩
 	FINGLE_STATUS single_status[5]; // 0-停止 1-循环 2-伸展 3-收缩
+
+    uint8_t key_status[4];
+    uint8_t led_status[4];
 } motor_status_t, *motor_status_p;
 
 void rxDataHandler(uint8_t *buff, uint16_t len);
 motor_status_p get_finger_status_p(void);
-
+void led_turn(uint8_t index, uint8_t status);
+uint8_t key_read(int index);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // __DRV_COMM_H__
 

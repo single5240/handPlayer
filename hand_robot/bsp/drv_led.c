@@ -97,54 +97,6 @@ void setMatchLightOn(void)
     led_flash.isLighted = 2;
 }
 
-void copeM(void)
-{
-    static uint8_t matchIntervalFlag = 0;
-    static uint32_t matchAllIntervalTime = 0;
-    if(led_flash.isLighted == 1)
-    {
-        if(matchAllIntervalTime<=20)
-        {
-            matchAllIntervalTime=0;
-        }
-        else
-        {
-            matchAllIntervalTime-=20;
-            return;
-        }
-        
-        if(matchIntervalFlag != 1 )
-        {
-            
-            matchAllIntervalTime = led_flash.flashInterval;
-            matchIntervalFlag = 1;
-        }
-        matchAllIntervalTime = led_flash.flashInterval;
-        
-      
-        static uint8_t matchFlashturn = 0;
-        if(matchFlashturn==0)
-        {
-            HAL_GPIO_WritePin(AN2_LED_GPIO_Port, AN2_LED_Pin, GPIO_PIN_SET);
-            matchFlashturn = 1;
-        }
-        else if(matchFlashturn == 1)
-        {
-            HAL_GPIO_WritePin(AN2_LED_GPIO_Port, AN2_LED_Pin, GPIO_PIN_RESET);
-            matchFlashturn = 0;
-        }
-    }
-    else if(led_flash.isLighted == 0)
-    {
-        HAL_GPIO_WritePin(AN2_LED_GPIO_Port, AN2_LED_Pin, GPIO_PIN_RESET);
-        matchIntervalFlag = 0;
-    }
-    else if(led_flash.isLighted == 2)
-    {
-        HAL_GPIO_WritePin(AN2_LED_GPIO_Port, AN2_LED_Pin, GPIO_PIN_SET);
-        matchIntervalFlag = 0;
-    }
-}
 
 // static uint8_t matchIntervalFlag = 0;
 //     static uint32_t matchAllIntervalTime = 0;

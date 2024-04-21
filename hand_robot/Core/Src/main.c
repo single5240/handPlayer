@@ -104,7 +104,6 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_UART5_Init();
-  MX_USART6_UART_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_RNG_Init();

@@ -71,16 +71,28 @@ void Error_Handler(void);
 #define RJ45_LED_R3_GPIO_Port GPIOC
 #define USART3_TXEN_Pin GPIO_PIN_5
 #define USART3_TXEN_GPIO_Port GPIOC
+#define KEY3_Pin GPIO_PIN_0
+#define KEY3_GPIO_Port GPIOB
+#define KEY2_Pin GPIO_PIN_1
+#define KEY2_GPIO_Port GPIOB
 #define USART1_TXEN_Pin GPIO_PIN_14
 #define USART1_TXEN_GPIO_Port GPIOB
+#define KEY0_Pin GPIO_PIN_15
+#define KEY0_GPIO_Port GPIOB
+#define KEY1_Pin GPIO_PIN_6
+#define KEY1_GPIO_Port GPIOC
+#define LED0_Pin GPIO_PIN_7
+#define LED0_GPIO_Port GPIOC
+#define LED1_Pin GPIO_PIN_8
+#define LED1_GPIO_Port GPIOC
+#define LED2_Pin GPIO_PIN_9
+#define LED2_GPIO_Port GPIOC
+#define LED3_Pin GPIO_PIN_8
+#define LED3_GPIO_Port GPIOA
 #define AN1_KEY_Pin GPIO_PIN_3
 #define AN1_KEY_GPIO_Port GPIOB
 #define AN1_LED_Pin GPIO_PIN_4
 #define AN1_LED_GPIO_Port GPIOB
-#define AN2_KEY_Pin GPIO_PIN_5
-#define AN2_KEY_GPIO_Port GPIOB
-#define AN2_LED_Pin GPIO_PIN_6
-#define AN2_LED_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

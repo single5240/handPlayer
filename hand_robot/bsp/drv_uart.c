@@ -35,8 +35,8 @@ static uint8_t uart5_tx_buff[UART5_TX_BUFFER_SIZE];
 static uint8_t uart5_tx_fifo_buff[UART5_TX_FIFO_SIZE];
 usart_manage_obj_t uart5_manage_obj = {0};
 
-extern UART_HandleTypeDef huart6;  
-extern DMA_HandleTypeDef hdma_usart6_rx;
+// extern UART_HandleTypeDef huart6;  
+// extern DMA_HandleTypeDef hdma_usart6_rx;
 extern DMA_HandleTypeDef hdma_usart6_tx;
 uint8_t usart6_rx_buff[USART6_RX_BUFFER_SIZE];
 static uint8_t usart6_tx_buff[USART6_TX_BUFFER_SIZE];
@@ -102,25 +102,25 @@ void uart5_idle_callback(void)
     }
 }
 
-void usart6_idle_callback(void)
-{
-    if (__HAL_UART_GET_FLAG(&huart6, UART_FLAG_IDLE))
-    {
-        /* clear idle it flag avoid idle interrupt all the time */
-        __HAL_UART_CLEAR_IDLEFLAG(&huart6);
+// void usart6_idle_callback(void)
+// {
+//     if (__HAL_UART_GET_FLAG(&huart6, UART_FLAG_IDLE))
+//     {
+//         /* clear idle it flag avoid idle interrupt all the time */
+//         __HAL_UART_CLEAR_IDLEFLAG(&huart6);
 
-        /* clear DMA transfer complete flag */
-        __HAL_DMA_DISABLE(huart6.hdmarx);
+//         /* clear DMA transfer complete flag */
+//         __HAL_DMA_DISABLE(huart6.hdmarx);
 
-        /* handle dbus data dbus_buf from DMA */
+//         /* handle dbus data dbus_buf from DMA */
 
-        usart6_manage_obj.call_back_f(usart6_manage_obj.rx_buffer, USART6_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart6.hdmarx));
+//         usart6_manage_obj.call_back_f(usart6_manage_obj.rx_buffer, USART6_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart6.hdmarx));
 
-        /* restart dma transmission */
-        __HAL_DMA_SET_COUNTER(huart6.hdmarx, USART6_RX_BUFFER_SIZE);
-        __HAL_DMA_ENABLE(huart6.hdmarx);
-    }
-}
+//         /* restart dma transmission */
+//         __HAL_DMA_SET_COUNTER(huart6.hdmarx, USART6_RX_BUFFER_SIZE);
+//         __HAL_DMA_ENABLE(huart6.hdmarx);
+//     }
+// }
 
 void usart2_idle_callback(void)
 {
@@ -202,20 +202,20 @@ void uart5_manage_init(void)
 
 void usart6_manage_init(void) // e28
 {
-    usart6_manage_obj.rx_buffer = usart6_rx_buff;
-    usart6_manage_obj.rx_buffer_size = USART6_RX_BUFFER_SIZE;
-    usart6_manage_obj.dma_h = &hdma_usart6_rx;
-    usart6_manage_obj.uart_h = &huart6;
-    usart6_manage_obj.tx_fifo_buffer = usart6_tx_fifo_buff;
-    usart6_manage_obj.tx_fifo_size = USART6_TX_FIFO_SIZE;
-    usart6_manage_obj.tx_buffer_size = USART6_TX_BUFFER_SIZE;
-    usart6_manage_obj.tx_buffer = usart6_tx_buff;
-    usart6_manage_obj.is_sending = 0;
+    // usart6_manage_obj.rx_buffer = usart6_rx_buff;
+    // usart6_manage_obj.rx_buffer_size = USART6_RX_BUFFER_SIZE;
+    // usart6_manage_obj.dma_h = &hdma_usart6_rx;
+    // usart6_manage_obj.uart_h = &huart6;
+    // usart6_manage_obj.tx_fifo_buffer = usart6_tx_fifo_buff;
+    // usart6_manage_obj.tx_fifo_size = USART6_TX_FIFO_SIZE;
+    // usart6_manage_obj.tx_buffer_size = USART6_TX_BUFFER_SIZE;
+    // usart6_manage_obj.tx_buffer = usart6_tx_buff;
+    // usart6_manage_obj.is_sending = 0;
 
-    fifo_s_init(&(usart6_manage_obj.tx_fifo), usart6_tx_fifo_buff, USART6_TX_FIFO_SIZE);
+    // fifo_s_init(&(usart6_manage_obj.tx_fifo), usart6_tx_fifo_buff, USART6_TX_FIFO_SIZE);
 
-    UART_Receive_DMA_No_IT(&huart6, usart6_rx_buff, USART6_RX_BUFFER_SIZE);
-    __HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
+    // UART_Receive_DMA_No_IT(&huart6, usart6_rx_buff, USART6_RX_BUFFER_SIZE);
+    // __HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
 }
 
 void usart2_manage_init(void) // mbr_no2
@@ -475,10 +475,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     {
         usart_transmit_hook(&uart5_manage_obj);
     }
-    else if (huart == &huart6)
-    {
-        usart_transmit_hook(&usart6_manage_obj);
-    }
+    // else if (huart == &huart6)
+    // {
+    //     usart_transmit_hook(&usart6_manage_obj);
+    // }
     else if (huart == &huart2)
     {
         usart2_send_over();

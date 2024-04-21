@@ -33,7 +33,8 @@ typedef struct
     uint8_t temperate;
     int16_t last_ecd;
     int16_t rolls;
-    int32_t actual_angle;
+    float actual_angle;
+    float last_angle;
     int32_t totall_ecd;
 
     int32_t set_angle;
@@ -49,6 +50,7 @@ typedef struct
 
     uint8_t all_motor_circul_flag;
     uint8_t single_motor_circul_flag[5];
+    uint8_t passive_control_flag;
 } motor_controller_t;
 void all_motor_cal_send(void);
 void all_motor_stop(void);
@@ -57,6 +59,7 @@ void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t mot
 void motor_pid_init(void);
 motor_controller_t (*get_finger_motor_controller_p(void))[5];
 void can_filter_init(void);
+void sendMotorData(void);
 
 #ifdef __cplusplus
 }
