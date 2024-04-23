@@ -193,8 +193,7 @@ static void fsm_passive_run_callback(void *parm){
 	} else if(app_main_obj.finger_status->motor_control_type == PASSIVE){
 		app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_PASSIVE_RUNNING);
 	}
-	//jws_todo
-	//被动模式检测电机电流和位置
+	passive_controller();
 	// log_i("passive_run_callback");
 }
 
@@ -312,6 +311,12 @@ void AppTask(void const * argument)
 
 	app_main_obj.finger_status = get_finger_status_p();
 	app_main_obj.finger_controllers = get_finger_motor_controller_p();
+	motor_init();
+	motor_reset_positions();
+	// app_main_obj.finger_status->motor_control_type = ACTIVE;
+	// app_main_obj.finger_status->motor_control_range == TOTAL;
+	// app_main_obj.finger_status->totaol_status = CIRCUL;
+	
 	log_i("App_Task_launch!");
 	for(;;) 
 	{

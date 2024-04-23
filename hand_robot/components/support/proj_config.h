@@ -2,7 +2,7 @@
  * @Author: lhq
  * @Date: 2023-06-19 23:36:23
  * @LastEditors: Vincent_Jiang jwslove40@163.com
- * @LastEditTime: 2024-04-20 16:26:15
+ * @LastEditTime: 2024-04-21 21:22:14
  * @FilePath: \handPlayer\hand_robot\components\support\proj_config.h
  * @Description: 
  * 
@@ -37,7 +37,7 @@ typedef uint8_t  u8;
 #define DEBUG_RTT 1
 #define DEBUG_UART 0
 
-#define DEBUG_LOG_SHELL_METHOD DEBUG_UART
+#define DEBUG_LOG_SHELL_METHOD DEBUG_RTT
 
 #ifdef __cplusplus
 }

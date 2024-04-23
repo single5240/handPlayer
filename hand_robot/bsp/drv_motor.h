@@ -1,3 +1,13 @@
+/*
+ * @Author: Vincent_Jiang jwslove40@163.com
+ * @Date: 2024-04-08 16:04:54
+ * @LastEditors: Vincent_Jiang jwslove40@163.com
+ * @LastEditTime: 2024-04-21 22:10:38
+ * @FilePath: \handPlayer\hand_robot\bsp\drv_motor.h
+ * @Description: 
+ * 
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ */
 #ifndef __DRV_MOTOR_H__
 #define __DRV_MOTOR_H__
 
@@ -48,6 +58,8 @@ typedef struct
     pid_parameter_t speed_pid;
     pid_parameter_t position_pid;
 
+    int16_t circul_end;
+
     uint8_t all_motor_circul_flag;
     uint8_t single_motor_circul_flag[5];
     uint8_t passive_control_flag;
@@ -60,6 +72,9 @@ void motor_pid_init(void);
 motor_controller_t (*get_finger_motor_controller_p(void))[5];
 void can_filter_init(void);
 void sendMotorData(void);
+uint8_t motor_reset_positions(void);
+void motor_init(void);
+void passive_controller(void);
 
 #ifdef __cplusplus
 }
