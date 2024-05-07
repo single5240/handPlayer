@@ -115,6 +115,11 @@ int main(void)
   __enable_irq();
   can_filter_init();
   HAL_TIM_Base_Start_IT(&htim2);
+  // HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+  // HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+  // HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+  // HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+
 //	SEGGER_RTT_printf(0,"RTT printf test! \r\n");
 	// printf(RTT_CTRL_BG_BRIGHT_GREEN RTT_CTRL_TEXT_BRIGHT_RED"app is running!\r\n");
 	// printf(RTT_CTRL_RESET);
@@ -206,7 +211,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM2) {
-
+    key_led_controller();
   }
   /* USER CODE END Callback 1 */
 }

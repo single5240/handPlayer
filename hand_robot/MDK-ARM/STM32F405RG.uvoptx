@@ -388,7 +388,7 @@
         <Ww>
           <count>45</count>
           <WinNumber>1</WinNumber>
-          <ItemText>app_main_obj</ItemText>
+          <ItemText>app_main_obj,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
@@ -408,7 +408,12 @@
         <Ww>
           <count>49</count>
           <WinNumber>1</WinNumber>
-          <ItemText>motor_controllers</ItemText>
+          <ItemText>motor_controllers,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>50</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>finger_status,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

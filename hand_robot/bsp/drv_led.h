@@ -9,14 +9,14 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 
 
-#define LED0_ON 	do{HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);}while(0);
-#define LED0_OFF 	do{HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);}while(0);
-#define LED1_ON 	do{HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);}while(0);
-#define LED1_OFF 	do{HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);}while(0);
-#define LED2_ON 	do{HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);}while(0);
-#define LED2_OFF 	do{HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);}while(0);
-#define LED3_ON 	do{HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);}while(0);
-#define LED3_OFF 	do{HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);}while(0);
+#define LED0_OFF 	do{HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);}while(0);
+#define LED0_ON 	do{HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);}while(0);
+#define LED1_OFF 	do{HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);}while(0);
+#define LED1_ON 	do{HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);}while(0);
+#define LED2_OFF 	do{HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);}while(0);
+#define LED2_ON 	do{HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);}while(0);
+#define LED3_OFF 	do{HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);}while(0);
+#define LED3_ON 	do{HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);}while(0);
 
 typedef struct
 {

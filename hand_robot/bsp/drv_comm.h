@@ -68,7 +68,8 @@ typedef struct {
 void rxDataHandler(uint8_t *buff, uint16_t len);
 motor_status_p get_finger_status_p(void);
 void led_turn(uint8_t index, uint8_t status);
-uint8_t key_read(int index);
+GPIO_PinState key_read(int index);
+void key_led_controller(void);
 #ifdef __cplusplus
 }
 #endif

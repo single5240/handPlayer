@@ -302,9 +302,19 @@ void *get_obj_p(void){
 	return &app_main_obj;
 }
 
+void jws_test(void){
+	app_main_obj.finger_status->motor_control_type = ACTIVE;
+	app_main_obj.finger_status->motor_control_range == TOTAL;
+	app_main_obj.finger_status->totaol_status = CIRCUL;
+}
+
 void AppTask(void const * argument)
 {
 	osDelay(5);
+	led_turn(0,0);
+	led_turn(1,0);
+	led_turn(2,0);
+	led_turn(3,0);
 	aop_fsm_config(&app_main_obj);
 	app_main_obj.fsm_init_f(&app_main_obj, fsm_table, fsm_table_lenth, STATE_AUTOPARA);
 	app_main_obj.fsm_eventUpdate_f(&app_main_obj, EVENT_AUTOPARA_SUCCESS);
@@ -313,10 +323,7 @@ void AppTask(void const * argument)
 	app_main_obj.finger_controllers = get_finger_motor_controller_p();
 	motor_init();
 	motor_reset_positions();
-	// app_main_obj.finger_status->motor_control_type = ACTIVE;
-	// app_main_obj.finger_status->motor_control_range == TOTAL;
-	// app_main_obj.finger_status->totaol_status = CIRCUL;
-	
+	osDelay(50);
 	log_i("App_Task_launch!");
 	for(;;) 
 	{

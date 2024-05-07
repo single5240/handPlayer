@@ -102,7 +102,7 @@ uint8_t motor_reset_positions(void)
 	int last_roll[5] = {10, 10, 10, 10, 10};
 	uint8_t done_flag[5] = {0};
 	int done = 5;
-	motor_controllers[0].motor_measure.set_speed = 1100;
+	motor_controllers[0].motor_measure.set_speed = -1500;
 	motor_controllers[1].motor_measure.set_speed = 1100;
 	motor_controllers[2].motor_measure.set_speed = 1100;
 	motor_controllers[3].motor_measure.set_speed = -1100;
@@ -148,8 +148,8 @@ uint8_t motor_reset_positions(void)
 
 void motor_pid_init(void)
 {
-	// PidInit(&(motor_controllers[0].speed_pid), 7, 0.004, 0.01, 2000, 300, 200);
-	// PidInit(&(motor_controllers[0].position_pid), 0.1, 0, 0.00, 300, 0, 50);
+	PidInit(&(motor_controllers[0].speed_pid), 		7, 0.004, 0.01,   3500, 300, 200);
+	PidInit(&(motor_controllers[0].position_pid), 0.1, 		0,  0.00,  600,   0,  50);
 
 	PidInit(&(motor_controllers[1].speed_pid),      7,  0.004,  0.01, 3000, 300, 200);
 	PidInit(&(motor_controllers[1].position_pid), 0.1,      0,  0.00,  500,   0,  50);
@@ -160,17 +160,17 @@ void motor_pid_init(void)
 	PidInit(&(motor_controllers[3].speed_pid),      7,  0.004,  0.01, 3000, 300, 200);
 	PidInit(&(motor_controllers[3].position_pid), 0.1,      0,  0.00,  500,   0,  50);
 
-	// PidInit(&(motor_controllers[4].speed_pid),      7,  0.004,  0.01, 2000, 300, 200);
-	// PidInit(&(motor_controllers[4].position_pid), 0.1,      0,  0.00,  300,   0,  50);
+	PidInit(&(motor_controllers[4].speed_pid),      7,  0.004,  0.01, 3500, 300, 200);
+	PidInit(&(motor_controllers[4].position_pid), 0.1,      0,  0.00,  600,   0,  50);
 }
 
 void motor_init(void){
 	motor_pid_init();
-	motor_controllers[0].circul_end = -90;  
+	motor_controllers[0].circul_end = 170;  
 	motor_controllers[1].circul_end = -40;
 	motor_controllers[2].circul_end = -75;
 	motor_controllers[3].circul_end = 90;
-	motor_controllers[4].circul_end = 50;
+	motor_controllers[4].circul_end = 100;
 }
 
 motor_controller_t (*get_finger_motor_controller_p(void))[5]
@@ -233,9 +233,11 @@ void all_motor_control_circul(void)
 		// 	motor_controllers->all_motor_circul_flag = 2;
 		// 	log_i("control_flag:2\r\n");
 		// }
-		if(motor_controllers[3].motor_measure.actual_angle >= motor_controllers[3].circul_end -10
+		if(motor_controllers[0].motor_measure.actual_angle >= motor_controllers[3].circul_end - 10
 					&& motor_controllers[1].motor_measure.actual_angle <= motor_controllers[1].circul_end + 3
-					&& motor_controllers[2].motor_measure.actual_angle <= motor_controllers[2].circul_end + 3){
+					&& motor_controllers[2].motor_measure.actual_angle <= motor_controllers[2].circul_end + 3
+					&& motor_controllers[3].motor_measure.actual_angle >= motor_controllers[3].circul_end -10
+					&& motor_controllers[4].motor_measure.actual_angle >= motor_controllers[4].circul_end -12){
 			motor_controllers->all_motor_circul_flag = 2;
 			log_i("control_flag:2\r\n");
 		}
@@ -243,11 +245,11 @@ void all_motor_control_circul(void)
 	}
 	case 2:
 	{
-		motor_controllers[0].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[0].motor_measure.set_totall_ecd = 4*8192;
 		motor_controllers[1].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[2].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[3].motor_measure.set_totall_ecd = -8192;
-		motor_controllers[4].motor_measure.set_totall_ecd = -8192;
+		motor_controllers[4].motor_measure.set_totall_ecd = 0;
 		motor_controllers->all_motor_circul_flag = 3;
 		log_i("control_flag:3\r\n");
 		break;
@@ -263,9 +265,11 @@ void all_motor_control_circul(void)
 		// 	motor_controllers->all_motor_circul_flag = 0;
 		// 	log_i("control_flag:0\r\n");
 		// }
-		if(motor_controllers[3].motor_measure.actual_angle <= 5
+		if(motor_controllers[0].motor_measure.actual_angle <= 55
 					&& motor_controllers[1].motor_measure.actual_angle >= -5
-					&& motor_controllers[2].motor_measure.actual_angle >= -5){
+					&& motor_controllers[2].motor_measure.actual_angle >= -5
+					&& motor_controllers[3].motor_measure.actual_angle <= 5
+					&& motor_controllers[4].motor_measure.actual_angle <= 15){
 			motor_controllers->all_motor_circul_flag = 0;
 			log_i("control_flag:0\r\n");
 		}
@@ -293,22 +297,39 @@ void all_motor_cal_send(void)
 
 void all_motor_stretch(void)
 {
-	motor_controllers[0].motor_measure.set_totall_ecd = 0;
-	motor_controllers[1].motor_measure.set_totall_ecd = 0;
-	motor_controllers[2].motor_measure.set_totall_ecd = 0;
-	motor_controllers[3].motor_measure.set_totall_ecd = 0;
-	motor_controllers[4].motor_measure.set_totall_ecd = 0;
-	all_motor_cal_send();
+	if(motor_controllers[0].motor_measure.actual_angle <= 55
+					&& motor_controllers[1].motor_measure.actual_angle >= -5
+					&& motor_controllers[2].motor_measure.actual_angle >= -5
+					&& motor_controllers[3].motor_measure.actual_angle <= 5
+					&& motor_controllers[4].motor_measure.actual_angle <= 15){
+		all_motor_stop();
+	} else {
+		motor_controllers[0].motor_measure.set_totall_ecd = 4*8192;
+		motor_controllers[1].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[2].motor_measure.set_totall_ecd = 8192;
+		motor_controllers[3].motor_measure.set_totall_ecd = -8192;
+		motor_controllers[4].motor_measure.set_totall_ecd = 0;
+		all_motor_cal_send();
+	}
+	
 }
 
 void all_motor_shrink(void)
 {
-	motor_controllers[0].motor_measure.set_totall_ecd =  motor_controllers[0].circul_end * 819;
-	motor_controllers[1].motor_measure.set_totall_ecd =  motor_controllers[1].circul_end * 819;
-	motor_controllers[2].motor_measure.set_totall_ecd =  motor_controllers[2].circul_end * 819;
-	motor_controllers[3].motor_measure.set_totall_ecd =  motor_controllers[3].circul_end * 819;
-	motor_controllers[4].motor_measure.set_totall_ecd =  motor_controllers[4].circul_end * 819;
-	all_motor_cal_send();
+	if(motor_controllers[0].motor_measure.actual_angle >= motor_controllers[3].circul_end - 5
+					&& motor_controllers[1].motor_measure.actual_angle <= motor_controllers[1].circul_end + 3
+					&& motor_controllers[2].motor_measure.actual_angle <= motor_controllers[2].circul_end + 3
+					&& motor_controllers[3].motor_measure.actual_angle >= motor_controllers[3].circul_end -10
+					&& motor_controllers[4].motor_measure.actual_angle >= motor_controllers[4].circul_end -10){
+		all_motor_stop();
+	} else {
+		motor_controllers[0].motor_measure.set_totall_ecd =  motor_controllers[0].circul_end * 819;
+		motor_controllers[1].motor_measure.set_totall_ecd =  motor_controllers[1].circul_end * 819;
+		motor_controllers[2].motor_measure.set_totall_ecd =  motor_controllers[2].circul_end * 819;
+		motor_controllers[3].motor_measure.set_totall_ecd =  motor_controllers[3].circul_end * 819;
+		motor_controllers[4].motor_measure.set_totall_ecd =  motor_controllers[4].circul_end * 819;
+		all_motor_cal_send();
+	}
 }
 
 void all_motor_stop(void)
