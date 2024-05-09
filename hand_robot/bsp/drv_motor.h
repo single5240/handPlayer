@@ -59,7 +59,7 @@ typedef struct
     pid_parameter_t position_pid;
 
     int16_t circul_end;
-
+    int16_t circul_start;
     uint8_t all_motor_circul_flag;
     uint8_t single_motor_circul_flag[5];
     uint8_t passive_control_flag;

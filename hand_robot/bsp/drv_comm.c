@@ -84,6 +84,9 @@ void short_push_key(uint8_t index){
 			finger_status.totaol_status = SHRINK;
         break;
         case 3:
+			//软重启
+			__ASM volatile ("cpsid i");
+			HAL_NVIC_SystemReset();
         break;
         default:
         break;

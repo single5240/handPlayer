@@ -98,7 +98,7 @@ void CAN_cmd_chassis(uint32_t StdId, int16_t motor1, int16_t motor2, int16_t mot
 
 uint8_t motor_reset_positions(void)
 {
-	int icount[5] = {20, 20, 20, 20, 20};
+	int icount[5] = {10, 20, 20, 20, 20};
 	int last_roll[5] = {10, 10, 10, 10, 10};
 	uint8_t done_flag[5] = {0};
 	int done = 5;
@@ -166,11 +166,17 @@ void motor_pid_init(void)
 
 void motor_init(void){
 	motor_pid_init();
-	motor_controllers[0].circul_end = 170;  
+	motor_controllers[0].circul_end = 180;  
 	motor_controllers[1].circul_end = -40;
 	motor_controllers[2].circul_end = -75;
 	motor_controllers[3].circul_end = 90;
 	motor_controllers[4].circul_end = 100;
+
+	motor_controllers[0].circul_start = 40;
+	motor_controllers[1].circul_start = 0;
+	motor_controllers[2].circul_start = 0;
+	motor_controllers[3].circul_start = 0;
+	motor_controllers[4].circul_start = 0;
 }
 
 motor_controller_t (*get_finger_motor_controller_p(void))[5]
@@ -233,19 +239,24 @@ void all_motor_control_circul(void)
 		// 	motor_controllers->all_motor_circul_flag = 2;
 		// 	log_i("control_flag:2\r\n");
 		// }
-		if(motor_controllers[0].motor_measure.actual_angle >= motor_controllers[3].circul_end - 10
+		if(motor_controllers[0].motor_measure.actual_angle >= motor_controllers[3].circul_end - 5
 					&& motor_controllers[1].motor_measure.actual_angle <= motor_controllers[1].circul_end + 3
 					&& motor_controllers[2].motor_measure.actual_angle <= motor_controllers[2].circul_end + 3
-					&& motor_controllers[3].motor_measure.actual_angle >= motor_controllers[3].circul_end -10
+					&& motor_controllers[3].motor_measure.actual_angle >= motor_controllers[3].circul_end -5
 					&& motor_controllers[4].motor_measure.actual_angle >= motor_controllers[4].circul_end -12){
 			motor_controllers->all_motor_circul_flag = 2;
 			log_i("control_flag:2\r\n");
 		}
+		log_i("[%f][%f][%f][%f][%f]",motor_controllers[0].motor_measure.actual_angle,
+					motor_controllers[1].motor_measure.actual_angle,
+					motor_controllers[2].motor_measure.actual_angle,
+					motor_controllers[3].motor_measure.actual_angle,
+					motor_controllers[4].motor_measure.actual_angle);
 		break;
 	}
 	case 2:
 	{
-		motor_controllers[0].motor_measure.set_totall_ecd = 4*8192;
+		motor_controllers[0].motor_measure.set_totall_ecd = 5*8192;
 		motor_controllers[1].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[2].motor_measure.set_totall_ecd = 8192;
 		motor_controllers[3].motor_measure.set_totall_ecd = -8192;
@@ -364,20 +375,20 @@ void single_motor_control_circul(uint8_t motor_number){
 	switch (motor_controllers->single_motor_circul_flag[motor_number]){
 		case 0:
         {
-            motor_controllers[motor_number].motor_measure.set_totall_ecd =  motor_controllers[motor_number].circul_end/10 * 8192;
+            motor_controllers[motor_number].motor_measure.set_totall_ecd =  motor_controllers[motor_number].circul_end * 819;
             motor_controllers->single_motor_circul_flag[motor_number] = 1;
             log_i("%dcontrol_flag_single:1\r\n", motor_number);
             break;
         }
         case 1:
 		{
-			if(motor_number>=3){
-				if (motor_controllers[motor_number].motor_measure.actual_angle >= motor_controllers[motor_number].circul_end){
+			if(motor_number==0 && motor_number>=3){
+				if (motor_controllers[motor_number].motor_measure.actual_angle >= motor_controllers[motor_number].circul_end-5){
 					motor_controllers->single_motor_circul_flag[motor_number] = 2;
 					log_i("%dcontrol_flag_single:2\r\n", motor_number);
 				}
 			} else {
-				if (motor_controllers[motor_number].motor_measure.actual_angle <= motor_controllers[motor_number].circul_end){
+				if (motor_controllers[motor_number].motor_measure.actual_angle <= motor_controllers[motor_number].circul_end+5){
 					motor_controllers->single_motor_circul_flag[motor_number] = 2;
 					log_i("%dcontrol_flag_single:2\r\n", motor_number);
 				}
@@ -394,12 +405,12 @@ void single_motor_control_circul(uint8_t motor_number){
         }
         case 3:{
 			if(motor_number >= 3){
-				if (motor_controllers[motor_number].motor_measure.actual_angle <= 0){
+				if (motor_controllers[motor_number].motor_measure.actual_angle <= motor_controllers[motor_number].circul_start+5){
 					motor_controllers->single_motor_circul_flag[motor_number] = 0;
 					log_i("%dcontrol_flag_single:0\r\n", motor_number);
             	}
 			} else {
-				if (motor_controllers[motor_number].motor_measure.actual_angle >= 0){
+				if (motor_controllers[motor_number].motor_measure.actual_angle >= motor_controllers[motor_number].circul_start-5){
 					motor_controllers->single_motor_circul_flag[motor_number] = 0;
 					log_i("%dcontrol_flag_single:0\r\n", motor_number);
             	}
@@ -423,12 +434,40 @@ void single_motor_controller(FINGLE_STATUS status[])
 			single_motor_control_circul(i);
 			break;
 		case STRETCH:
-			motor_controllers[i].motor_measure.set_totall_ecd = 0;
+			motor_controllers[i].motor_measure.set_totall_ecd = motor_controllers[i].circul_start * 819;
+			if(i >= 3){
+				if (motor_controllers[i].motor_measure.actual_angle <= motor_controllers[i].circul_start+5){
+					motor_controllers[i].motor_measure.set_current = 0;
+					status[i] = 0;
+					log_i("%d-set 0\r\n", i);
+            	}
+			} else {
+				if (motor_controllers[i].motor_measure.actual_angle >= motor_controllers[i].circul_start-5){
+					motor_controllers[i].motor_measure.set_current = 0;
+					status[i] = 0;
+					log_i("%d-set 0\r\n", i);
+            	}
+			}
 			motor_controllers[i].motor_measure.set_speed = PidCalculate(&motor_controllers[i].position_pid, motor_controllers[i].motor_measure.set_totall_ecd, motor_controllers[i].motor_measure.totall_ecd);
 			motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
 			break;
 		case SHRINK:
 			motor_controllers[i].motor_measure.set_totall_ecd = motor_controllers[i].circul_end * 819;
+			if(i == 0 && i >= 3){
+				if (motor_controllers[i].motor_measure.actual_angle >= motor_controllers[i].circul_end-5){
+					motor_controllers[i].motor_measure.set_current = 0;
+					status[i] = 0;
+					log_i("%d-set 0\r\n", i);
+					break;
+				}
+			} else {
+				if (motor_controllers[i].motor_measure.actual_angle <= motor_controllers[i].circul_end+5){
+					motor_controllers[i].motor_measure.set_current = 0;
+					status[i] = 0;
+					log_i("%d-set 0\r\n", i);
+					break;
+				}
+			}
 			motor_controllers[i].motor_measure.set_speed = PidCalculate(&motor_controllers[i].position_pid, motor_controllers[i].motor_measure.set_totall_ecd, motor_controllers[i].motor_measure.totall_ecd);
 			motor_controllers[i].motor_measure.set_current = PidCalculate(&motor_controllers[i].speed_pid, motor_controllers[i].motor_measure.set_speed, motor_controllers[i].motor_measure.speed_rpm);
 			break;
@@ -447,11 +486,11 @@ void passive_controller(void){
 	{
 		case 0:
 	    {
-			if(motor_controllers[0].motor_measure.last_angle != motor_controllers[0].motor_measure.actual_angle
-						|| motor_controllers[1].motor_measure.last_angle != motor_controllers[1].motor_measure.actual_angle
-						|| motor_controllers[2].motor_measure.last_angle != motor_controllers[2].motor_measure.actual_angle
-						|| motor_controllers[3].motor_measure.last_angle != motor_controllers[3].motor_measure.actual_angle
-						|| motor_controllers[4].motor_measure.last_angle != motor_controllers[4].motor_measure.actual_angle){
+			if((abs((int)(motor_controllers[0].motor_measure.last_angle - motor_controllers[0].motor_measure.actual_angle)) > 2) 
+						|| (fabsf(motor_controllers[1].motor_measure.last_angle - motor_controllers[1].motor_measure.actual_angle) > 2)
+						|| (fabsf(motor_controllers[2].motor_measure.last_angle - motor_controllers[2].motor_measure.actual_angle) > 2)
+						|| (fabsf(motor_controllers[3].motor_measure.last_angle - motor_controllers[3].motor_measure.actual_angle) > 2)
+						|| (fabsf(motor_controllers[4].motor_measure.last_angle - motor_controllers[4].motor_measure.actual_angle) > 2)){
 				 motor_controllers->passive_control_flag = 1;
 			}
             break;
@@ -478,9 +517,6 @@ void sendMotorData(void){
 			data_send_motor[i+1] = (uint8_t)(-motor_controllers[i].motor_measure.actual_angle);
 		} else {
 			data_send_motor[i+1] = (uint8_t)(motor_controllers[i].motor_measure.actual_angle);
-		}
-		if(i == 0 || i == 4){
-			data_send_motor[i+1] = (uint8_t)(data_send_motor[3]);
 		}
 		// data_send_motor[i+1] += i;
 		// if(data_send_motor[i+1]>=90) 
