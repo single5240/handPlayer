@@ -22,7 +22,7 @@ typedef struct FsmTable_s
     void (*eventActFun)(void *);  /* 动作函数 */
     uint8_t NextState;            /* 跳转状态 */
 }FsmTable_T;
- 
+
 typedef struct FSM_s
 {
     FsmTable_T *FsmTable;         /* 状态迁移表 */

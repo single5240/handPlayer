@@ -5,7 +5,7 @@
 #include "fifo.h"
 #include "event_mgr.h"
 #include "drv_led.h"
-
+#include "drv_motor.h"
 #define LOG_TAG "offline_task"
 #define LOG_OUTPUT_LEVEL LOG_INFO
 #include "log.h"
@@ -81,7 +81,8 @@ void Offline_Task(void const *argument)
 
 	while (1)
 	{
-		osDelayUntil(&period, 2);
+		sendMotorData();	
+		osDelayUntil(&period, 10);
 	}
 }
 

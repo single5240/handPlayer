@@ -45,7 +45,6 @@ void Comm_Task(void const *argument)
 				sendData("DC32(50,100,'Range:Single',4);\r\n");
 			}
 		}
-		sendMotorData();
 		last_status[0] = finger_status_comm->motor_control_type;
 		last_status[1] = finger_status_comm->motor_control_range;
 		osDelayUntil(&period, 50);

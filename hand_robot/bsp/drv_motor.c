@@ -247,11 +247,11 @@ void all_motor_control_circul(void)
 			motor_controllers->all_motor_circul_flag = 2;
 			log_i("control_flag:2\r\n");
 		}
-		log_i("[%f][%f][%f][%f][%f]",motor_controllers[0].motor_measure.actual_angle,
-					motor_controllers[1].motor_measure.actual_angle,
-					motor_controllers[2].motor_measure.actual_angle,
-					motor_controllers[3].motor_measure.actual_angle,
-					motor_controllers[4].motor_measure.actual_angle);
+		// log_i("[%f][%f][%f][%f][%f]",motor_controllers[0].motor_measure.actual_angle,
+		// 			motor_controllers[1].motor_measure.actual_angle,
+		// 			motor_controllers[2].motor_measure.actual_angle,
+		// 			motor_controllers[3].motor_measure.actual_angle,
+		// 			motor_controllers[4].motor_measure.actual_angle);
 		break;
 	}
 	case 2:
@@ -404,7 +404,7 @@ void single_motor_control_circul(uint8_t motor_number){
             break;
         }
         case 3:{
-			if(motor_number >= 3){
+			if(motor_number==0 && motor_number >= 3){
 				if (motor_controllers[motor_number].motor_measure.actual_angle <= motor_controllers[motor_number].circul_start+5){
 					motor_controllers->single_motor_circul_flag[motor_number] = 0;
 					log_i("%dcontrol_flag_single:0\r\n", motor_number);
@@ -435,7 +435,7 @@ void single_motor_controller(FINGLE_STATUS status[])
 			break;
 		case STRETCH:
 			motor_controllers[i].motor_measure.set_totall_ecd = motor_controllers[i].circul_start * 819;
-			if(i >= 3){
+			if(i == 0 && i >= 3){
 				if (motor_controllers[i].motor_measure.actual_angle <= motor_controllers[i].circul_start+5){
 					motor_controllers[i].motor_measure.set_current = 0;
 					status[i] = 0;
