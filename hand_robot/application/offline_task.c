@@ -82,7 +82,7 @@ void Offline_Task(void const *argument)
 	while (1)
 	{
 		sendMotorData();	
-		osDelayUntil(&period, 10);
+		osDelayUntil(&period, 5);
 	}
 }
 

@@ -84,12 +84,8 @@ uint32_t usart1_rx_callback(uint8_t *buff, uint16_t len)
  */
 void board_config(void)
 {
-	/* system log */
 	uart5_manage_init();
 	uart5_rx_callback_register(uart5_rx_callback);
-
-	// usart6_manage_init();
-	// usart6_rx_callback_register(usart6_rx_callback);
 
 	usart2_manage_init();
 	usart2_rx_callback_register(usart2_rx_callback);

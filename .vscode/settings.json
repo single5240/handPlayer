@@ -30,7 +30,8 @@
     "limits": "c",
     "gpio.h": "c",
     "winapifamily.h": "c",
-    "comm_task.h": "c"
+    "comm_task.h": "c",
+    "drv_led.h": "c"
   },
   "todo-tree.tree.scanMode": "workspace only",
   "C_Cpp_Runner.cCompilerPath": "gcc",
